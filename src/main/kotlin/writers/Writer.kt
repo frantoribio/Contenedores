@@ -1,3 +1,5 @@
 package writers
 
-sealed interface Writer
+interface Writer<T> {
+    fun write(path: String, content: Sequence<T>)
+}
