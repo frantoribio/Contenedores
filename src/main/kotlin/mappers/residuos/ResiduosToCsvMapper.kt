@@ -1,14 +1,15 @@
-package mappers
+package mappers.residuos
 
 import dto.Residuos
 import extensions.component6
 import extensions.component7
+import mappers.Mapper
 
 /**
- * Parses all lines of the csv file to a Residuos lazy sequence
+ * maps all lines of the csv file to a Residuos lazy sequence
  */
 
-class ResiduosCsvMapper : Mapper<Sequence<String>, Sequence<Residuos>> {
+class ResiduosToCsvMapper : Mapper<Sequence<String>, Sequence<Residuos>> {
     override fun map(input: Sequence<String>): Sequence<Residuos> = input.drop(1).map { line ->
         val (ano, mes, lote, residuo, distrito, nombreDistrito, toneladas) = line.split(';')
         Residuos(

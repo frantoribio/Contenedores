@@ -27,5 +27,4 @@ private fun String.parse(): Int {
         "diciembre" -> Month.DECEMBER.value
         else -> throw IllegalArgumentException("El mes no es válido")
     }
-
 }
