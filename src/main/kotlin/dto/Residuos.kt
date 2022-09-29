@@ -1,27 +1,11 @@
 package dto
 
 data class Residuos(
-    val age : Int,
-    val month : String,
-    val batch : Int,
-    val distrit : Int,
-    val distritName : String,
-    val tons : Int
+    val ano: Int,
+    val mes: String,
+    val lote: Int,
+    val residuo: String, //Some values are not specified in the specification
+    val distrito: Int,
+    val nombreDistrito: String,
+    val toneladas: Double
 )
-
-enum class Residuo {
-    RESTO,
-    ENVASES,
-    VIDRIO,
-    ORGANICA,
-    PAPEL_Y_CARTON,
-    PUNTOS_LIMPIOS,
-    CARTON_COMERCIAL,
-    VIDRIO_COMERCIAL,
-    PILAS,
-    ANIMALES_MUERTOS,
-    RCD,
-    CONTENEDORES_DE_ROPA_USADA,
-    RESIDUOS_DEPOSITADOS
-
-}
