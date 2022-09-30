@@ -1,17 +1,18 @@
 package readers
 
-import dto.Residuos
-import mappers.residuos.ResiduosToCsvMapper
+import dto.Residuo
+import mappers.InMapperCsv
+import mappers.residuos.CsvMapperResiduos
 import java.io.File
 import java.io.FileNotFoundException
 
-class ResiduosCsvReader : Reader<Residuos> {
-    private val mapper = ResiduosToCsvMapper()
+class ResiduosCsvReader(private val path: String) : Reader<Residuo> {
+    private val mapper: InMapperCsv = CsvMapperResiduos()
 
-    override fun read(path: String): Sequence<Residuos> = sequence {
+    override fun read(): Sequence<Residuo> = sequence {
         File(path)
             .apply { if (!exists()) throw FileNotFoundException() }
-            .useLines { yieldAll(mapper.map(it)) }
+            .useLines { yieldAll(mapper.mapToDto(it)) }
     }
 }
 

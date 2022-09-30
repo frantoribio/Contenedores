@@ -1,6 +1,6 @@
 package dto
 
-data class Residuos(
+data class Residuo(
     val ano: Int,
     val mes: String,
     val lote: Int,

@@ -1,16 +1,17 @@
 package writers
 
-import dto.Residuos
-import mappers.residuos.CsvToResiduos
+import dto.Residuo
+import mappers.OutMapperCsv
+import mappers.residuos.CsvMapperResiduos
 import java.io.File
 import java.nio.file.Files
 
-class ResiduosCsvWriter : Writer<Residuos> {
-    private val mapper = CsvToResiduos()
+class ResiduosCsvWriter(private val path: String) : Writer<Residuo> {
+    private val mapper: OutMapperCsv = CsvMapperResiduos()
 
-    override fun write(path: String, content: Sequence<Residuos>) = File(path)
+    override fun write(content: Sequence<Residuo>) = File(path)
         .apply { if (exists()) Files.delete(toPath()) }
         .apply { createNewFile() }
         .printWriter()
-        .use { out -> mapper.map(content).forEach { out.println(it) } }
+        .use { out -> mapper.mapFromDto(content).forEach { out.println(it) } }
 }

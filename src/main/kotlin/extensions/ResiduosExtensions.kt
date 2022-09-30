@@ -1,14 +1,15 @@
 package extensions
 
-import dto.Residuos
+import dto.Residuo
 import java.time.LocalDate
 import java.time.Month
 import java.util.*
 
 /**
  * Returns date in LocalDate format
+ * @throws IllegalArgumentException if date not in specified format
  */
-val Residuos.fecha: LocalDate
+val Residuo.fecha: LocalDate
     get() = LocalDate.of(ano, mes.parse(), 1)
 
 private fun String.parse(): Int {
