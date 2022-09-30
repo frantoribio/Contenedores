@@ -5,10 +5,6 @@ import args.OpcionConfig.OpcionResumen
 import java.util.*
 
 class ArgsParser(private val params: Array<String>) {
-    var distrito: String? = null
-    var directorioOrigen: String? = null
-    var directorioDestino: String? = null
-
     init {
         if (params.isEmpty())
             throw IllegalArgumentException("No se han introducido parámetros")
