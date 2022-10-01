@@ -1,4 +1,4 @@
-package dto
+package models
 
 data class Residuo(
     val ano: Int,

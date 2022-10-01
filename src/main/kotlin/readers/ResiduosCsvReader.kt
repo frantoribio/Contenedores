@@ -1,8 +1,8 @@
 package readers
 
-import dto.Residuo
 import mappers.InMapperCsv
 import mappers.residuos.CsvMapperResiduos
+import models.Residuo
 import java.io.File
 import java.io.FileNotFoundException
 

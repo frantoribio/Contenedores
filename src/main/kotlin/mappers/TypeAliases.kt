@@ -1,6 +1,6 @@
 package mappers
 
-import dto.Residuo
+import models.Residuo
 
 typealias InMapperCsv = ResiduosInMapper<Sequence<String>, Residuo>
 typealias OutMapperCsv = ResiduosOutMapper<Residuo, Sequence<String>>

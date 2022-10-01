@@ -1,6 +1,6 @@
 package writers
 
-import dto.Residuo
+import models.Residuo
 import org.junit.jupiter.api.Test
 import java.io.File
 

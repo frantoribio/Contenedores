@@ -1,10 +1,10 @@
 package mappers.residuos
 
-import dto.Residuo
 import exceptions.CsvException
 import extensions.*
 import mappers.InMapperCsv
 import mappers.OutMapperCsv
+import models.Residuo
 
 /**
  * maps all lines of the csv file to a Residuo lazy sequence

@@ -1,6 +1,6 @@
 package extensions
 
-import dto.Residuo
+import models.Residuo
 import java.time.LocalDate
 import java.time.Month
 import java.util.*
