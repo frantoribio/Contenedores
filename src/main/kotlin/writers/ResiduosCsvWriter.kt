@@ -13,5 +13,5 @@ class ResiduosCsvWriter(private val path: String) : Writer<Residuo> {
         .apply { if (exists()) Files.delete(toPath()) }
         .apply { createNewFile() }
         .printWriter()
-        .use { out -> mapper.mapFromDto(content).forEach { out.println(it) } }
+        .use { out -> mapper.mapFrom(content).forEach { out.println(it) } }
 }

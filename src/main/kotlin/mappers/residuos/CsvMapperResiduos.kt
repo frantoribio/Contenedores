@@ -11,7 +11,7 @@ import models.Residuo
  */
 
 class CsvMapperResiduos : InMapperCsv, OutMapperCsv {
-    override fun mapToDto(input: Sequence<String>): Sequence<Residuo> = input.drop(1).map { line ->
+    override fun mapTo(input: Sequence<String>): Sequence<Residuo> = input.drop(1).map { line ->
         val (ano, mes, lote, residuo, distrito, nombreDistrito, toneladas) = line.split(';')
         Residuo(
             ano?.toIntOrNull()
@@ -37,7 +37,7 @@ class CsvMapperResiduos : InMapperCsv, OutMapperCsv {
         )
     }
 
-    override fun mapFromDto(input: Sequence<Residuo>): Sequence<String> = sequence {
+    override fun mapFrom(input: Sequence<Residuo>): Sequence<String> = sequence {
         yield("Año;Mes;Lote;Residuo;Distrito;Nombre Distrito;Toneladas")
         yieldAll(input.map { residuos ->
             "${residuos.ano};${residuos.mes};${residuos.lote};${residuos.residuo};${residuos.distrito};${residuos.nombreDistrito};${

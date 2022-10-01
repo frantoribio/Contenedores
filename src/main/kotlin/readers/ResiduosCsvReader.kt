@@ -12,7 +12,7 @@ class ResiduosCsvReader(private val path: String) : Reader<Residuo> {
     override fun read(): Sequence<Residuo> = sequence {
         File(path)
             .apply { if (!exists()) throw FileNotFoundException() }
-            .useLines { yieldAll(mapper.mapToDto(it)) }
+            .useLines { yieldAll(mapper.mapTo(it)) }
     }
 }
 
