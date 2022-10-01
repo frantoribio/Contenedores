@@ -1,7 +1,6 @@
 package readers
 
 import exceptions.CsvException
-import extensions.fecha
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.io.FileNotFoundException
@@ -17,8 +16,6 @@ internal class ResiduoCsvReaderTest {
         val expected = data.firstOrNull()
 
         assert(data.count() == 2138)
-        assert(expected?.ano == 2021)
-        assert(expected?.mes == "enero")
         assert(expected?.lote == 1)
         assert(expected?.residuo == "RESTO")
         assert(expected?.distrito == 1)
