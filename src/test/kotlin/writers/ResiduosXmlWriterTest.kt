@@ -1,10 +1,12 @@
 package writers
 
+import dto.ResiduoDto
+import extensions.toResiduoDto
 import kotlinx.serialization.decodeFromString
-import mappers.residuos.XmlMapper
 import models.Residuo
 import nl.adaptivity.xmlutil.serialization.XML
 import org.junit.jupiter.api.Test
+import parsers.residuos.XmlParser
 import java.io.File
 import java.time.LocalDate
 import java.time.Month
@@ -25,9 +27,9 @@ internal class ResiduosXmlWriterTest {
             )
         )
 
-        val writer = FileWriter("src/test/resources/written.xml", XmlMapper())
+        val writer = FileWriter("src/test/resources/written.xml", XmlParser())
 
-        writer.write(content)
+        writer.write(content.toResiduoDto())
 
         val file = File("src/test/resources/written.xml")
         assert(file.exists())
@@ -36,7 +38,7 @@ internal class ResiduosXmlWriterTest {
             autoPolymorphic = true
         }
 
-        val residuo = xml.decodeFromString<List<Residuo>>(file.inputStream().bufferedReader().readText())
+        val residuo = xml.decodeFromString<List<ResiduoDto>>(file.inputStream().bufferedReader().readText())
 
         assert(residuo.count() == 1)
         assert(residuo[0].lote == 2)
