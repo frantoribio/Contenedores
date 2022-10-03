@@ -2,24 +2,22 @@ package mappers.residuos
 
 
 import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeToSequence
+import kotlinx.serialization.json.encodeToStream
+import models.Residuo
 import java.io.InputStream
+import java.io.OutputStream
 import java.util.*
 
 
-object JsonMapper {
-
-    val json = Json {
-        prettyPrint = true
-        encodeDefaults = true
-    }
+class JsonMapper(private val json: Json = Json { prettyPrint = true }) : Mapper<Residuo> {
 
     @OptIn(ExperimentalSerializationApi::class)
-    inline fun <reified T> mapTo(input: InputStream): Sequence<T> = json.decodeToSequence(input)
+    override fun map(input: InputStream): Sequence<Residuo> = json.decodeToSequence(input)
 
-    inline fun <reified T> mapFrom(input: Sequence<T>): InputStream =
-        json.encodeToString(input.toList()).byteInputStream()
+    @OptIn(ExperimentalSerializationApi::class)
+    override fun map(input: Sequence<Residuo>, outputStream: OutputStream) =
+        json.encodeToStream(input.toList(), outputStream)
 }
 
