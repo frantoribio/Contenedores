@@ -3,14 +3,14 @@ package readers
 import extensions.toResiduo
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import parsers.residuos.JsonParser
+import parsers.residuos.JsonParserResiduos
 import java.io.FileNotFoundException
 
 internal class ResiduosJsonReaderTest {
 
     @Test
     fun shouldRead() {
-        val reader = FileReader("src/test/resources/residuos.json", JsonParser())
+        val reader = FileReader("src/test/resources/residuos.json", JsonParserResiduos())
 
         val data = reader.read().toResiduo()
         val residuo = data.firstOrNull()
@@ -25,7 +25,7 @@ internal class ResiduosJsonReaderTest {
 
     @Test
     fun shouldNotReadNonExistingFile() {
-        val reader = FileReader("src/test/resources/asdresiduos.json", JsonParser())
+        val reader = FileReader("src/test/resources/asdresiduos.json", JsonParserResiduos())
 
         assertThrows<FileNotFoundException> { reader.read().toList() }
     }

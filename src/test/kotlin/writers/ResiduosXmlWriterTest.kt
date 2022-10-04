@@ -6,7 +6,7 @@ import kotlinx.serialization.decodeFromString
 import models.Residuo
 import nl.adaptivity.xmlutil.serialization.XML
 import org.junit.jupiter.api.Test
-import parsers.residuos.XmlParser
+import parsers.residuos.XmlParserResiduos
 import java.io.File
 import java.time.LocalDate
 import java.time.Month
@@ -27,7 +27,7 @@ internal class ResiduosXmlWriterTest {
             )
         )
 
-        val writer = FileWriter("src/test/resources/written.xml", XmlParser())
+        val writer = FileWriter("src/test/resources/written.xml", XmlParserResiduos())
 
         writer.write(content.toResiduoDto())
 
