@@ -1,8 +1,9 @@
 package writers
 
-import mappers.residuos.CsvMapperResiduos
+import extensions.toResiduoDto
 import models.Residuo
 import org.junit.jupiter.api.Test
+import parsers.residuos.CsvParserResiduos
 import java.io.File
 import java.time.LocalDate
 import java.time.Month
@@ -11,7 +12,7 @@ internal class ResiduoCsvWriterTest {
 
     @Test
     fun shouldWrite() {
-        val writer = FileWriter("src/test/resources/written.csv", CsvMapperResiduos())
+        val writer = FileWriter("src/test/resources/written.csv", CsvParserResiduos())
         val content = sequenceOf(
             Residuo(
                 LocalDate.of(1, Month.JANUARY.value, 1),
@@ -24,7 +25,7 @@ internal class ResiduoCsvWriterTest {
             )
         )
 
-        writer.write(content)
+        writer.write(content.toResiduoDto())
 
         val file = File("src/test/resources/written.csv")
         assert(file.exists())
