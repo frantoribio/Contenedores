@@ -12,7 +12,7 @@ import java.io.OutputStream
 import java.util.*
 
 
-class JsonParser(private val json: Json = Json { prettyPrint = true }) : Parser<ResiduoDto> {
+class JsonParserResiduos(private val json: Json = Json { prettyPrint = true }) : Parser<ResiduoDto> {
 
     @OptIn(ExperimentalSerializationApi::class)
     override fun parse(input: InputStream): Sequence<ResiduoDto> = json.decodeToSequence(input)

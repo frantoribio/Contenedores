@@ -2,8 +2,8 @@ package writers
 
 import dto.ResiduoDto
 import parsers.residuos.CsvParserResiduos
-import parsers.residuos.JsonParser
-import parsers.residuos.XmlParser
+import parsers.residuos.JsonParserResiduos
+import parsers.residuos.XmlParserResiduos
 import java.io.File
 import java.util.*
 
@@ -18,9 +18,9 @@ class ResiduosFileWriter(private var path: String) : Writer<ResiduoDto> {
             .path
     }
 
-    private val jsonParser = JsonParser()
+    private val jsonParser = JsonParserResiduos()
     private val csvParserResiduos = CsvParserResiduos()
-    private val xmlParser = XmlParser()
+    private val xmlParser = XmlParserResiduos()
 
     private val jsonWriter = FileWriter("$path${File.separator}$name.json", jsonParser)
     private val csvWriter = FileWriter("$path${File.separator}$name.csv", csvParserResiduos)
