@@ -1,6 +1,6 @@
 package writers
 
-import parsers.residuos.Parser
+import parsers.Parser
 import java.io.File
 import java.nio.file.Files
 

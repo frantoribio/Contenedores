@@ -6,6 +6,7 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeToSequence
 import kotlinx.serialization.json.encodeToStream
+import parsers.Parser
 import java.io.InputStream
 import java.io.OutputStream
 import java.util.*

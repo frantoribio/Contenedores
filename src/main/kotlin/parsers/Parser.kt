@@ -1,4 +1,4 @@
-package parsers.residuos
+package parsers
 
 import java.io.InputStream
 import java.io.OutputStream

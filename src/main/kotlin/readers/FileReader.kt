@@ -1,6 +1,6 @@
 package readers
 
-import parsers.residuos.Parser
+import parsers.Parser
 import java.io.File
 import java.io.FileNotFoundException
 
