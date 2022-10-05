@@ -1,9 +1,10 @@
-package writers
+package writers.residuos
 
 import extensions.toResiduoDto
 import models.Residuo
 import org.junit.jupiter.api.Test
 import parsers.residuos.CsvParserResiduos
+import writers.FileWriter
 import java.io.File
 import java.time.LocalDate
 import java.time.Month

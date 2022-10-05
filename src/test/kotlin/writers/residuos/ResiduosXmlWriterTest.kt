@@ -1,4 +1,4 @@
-package writers
+package writers.residuos
 
 import dto.ResiduoDto
 import extensions.toResiduoDto
@@ -7,6 +7,7 @@ import models.Residuo
 import nl.adaptivity.xmlutil.serialization.XML
 import org.junit.jupiter.api.Test
 import parsers.residuos.XmlParserResiduos
+import writers.FileWriter
 import java.io.File
 import java.time.LocalDate
 import java.time.Month
