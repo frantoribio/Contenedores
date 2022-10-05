@@ -15,10 +15,10 @@ data class Contenedor(
     val tipoVia: String,
     val nombreVia: String,
     val numVia: Int?,
-    val coordenadaX: Long,
-    val coordenadaY: Long,
-    val longitud: Int,
-    val latitud: Int,
+    val coordenadaX: Float,
+    val coordenadaY: Float,
+    val longitud: String,
+    val latitud: String,
     val direccion: String
 )
 
