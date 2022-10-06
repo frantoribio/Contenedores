@@ -53,14 +53,11 @@ class CsvParserContenedores : Parser<ContenedorDto> {
                 nombreVia = nombreVia?.ifBlank { throw CsvException("El nombre de vía no puede quedar vacía") }
                     ?: throw CsvException("El nombre de vía no puede ser nulo"),
 
-                numVia = numVia?.toIntOrNull()
-                    ?: throw CsvException("El numero de vía no es un número"),
+                numVia = numVia?.toIntOrNull(),
 
-                coordenadaX = coordenadaX?.toFloatOrNull()
-                    ?: throw CsvException("La coordenada no es un número"),
+                coordenadaX = coordenadaX?.toFloatOrNull(),
 
-                coordenadaY = coordenadaY?.toFloatOrNull()
-                    ?: throw CsvException("La coordenada no es un número"),
+                coordenadaY = coordenadaY?.toFloatOrNull(),
 
                 longitud = longitud?.ifBlank { throw CsvException("La longitud no puede quedar vacía") }
                     ?: throw CsvException("La longitud no es un número separado por punto"),

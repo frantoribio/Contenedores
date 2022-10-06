@@ -15,17 +15,17 @@ data class Contenedor(
     val tipoVia: String,
     val nombreVia: String,
     val numVia: Int?,
-    val coordenadaX: Float,
-    val coordenadaY: Float,
+    val coordenadaX: Float?,
+    val coordenadaY: Float?,
     val longitud: String,
     val latitud: String,
     val direccion: String
 )
 
 enum class TipoContenedor(val tipo: String) {
-    ORGANICA("ORGÁNICA"),
+    ORGANICA("ORGANICA"),
     RESTO("RESTO"),
     VIDRIO("VIDRIO"),
-    PAPEL_Y_CARTON("PAPEL Y CARTÓN"),
+    PAPEL_Y_CARTON("PAPEL-CARTON"),
     ENVASES("ENVASES"),
 }

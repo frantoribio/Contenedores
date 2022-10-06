@@ -15,8 +15,8 @@ data class ContenedorDto(
     val tipoVia: String,
     val nombreVia: String,
     val numVia: Int?,
-    val coordenadaX: Float,
-    val coordenadaY: Float,
+    val coordenadaX: Float?,
+    val coordenadaY: Float?,
     val longitud: String,
     val latitud: String,
     val direccion: String

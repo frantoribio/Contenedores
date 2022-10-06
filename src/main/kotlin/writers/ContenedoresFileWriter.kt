@@ -6,6 +6,7 @@ import parsers.contenedores.JsonParserContenedores
 import parsers.contenedores.XmlParserContenedores
 import java.io.File
 import java.util.*
+import java.util.concurrent.CompletableFuture
 
 class ContenedoresFileWriter(private var path: String) : Writer<ContenedorDto> {
     private val name: String = UUID.randomUUID().toString()
@@ -27,8 +28,10 @@ class ContenedoresFileWriter(private var path: String) : Writer<ContenedorDto> {
     private val xmlWriterContenedores = FileWriter("$path${File.separator}$name.xml", xmlParserContenedores)
 
     override fun write(content: Sequence<ContenedorDto>) {
-        csvWriterContenedores.write(content)
-        jsonWriterContenedores.write(content)
-        xmlWriterContenedores.write(content)
+        CompletableFuture.allOf(
+            CompletableFuture.runAsync { jsonWriterContenedores.write(content) },
+            CompletableFuture.runAsync { csvWriterContenedores.write(content) },
+            CompletableFuture.runAsync { xmlWriterContenedores.write(content) }
+        ).join()
     }
 }

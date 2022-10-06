@@ -29,7 +29,7 @@ fun ContenedorDto.toContenedor(): Contenedor {
     return Contenedor(
         codIntSitu,
         TipoContenedor.values().firstOrNull { it.tipo == tipoContenedor.uppercase() }
-            ?: throw IllegalArgumentException("El tipo de contenedor no es válido"),
+            ?: throw IllegalArgumentException("El tipo $tipoContenedor de contenedor no es válido"),
         modelo,
         descripModelo,
         cantidadContenedores,
