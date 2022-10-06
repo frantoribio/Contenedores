@@ -15,7 +15,7 @@ internal class ContenedoresJsonReaderTest {
 
         val data = reader.read().toContenedor()
         val contenedor = data.firstOrNull()
-
+        //TODO ACABAR
         //assert(data.count() == 1)
 
     }

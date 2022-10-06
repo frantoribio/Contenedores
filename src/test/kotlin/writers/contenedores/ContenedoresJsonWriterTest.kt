@@ -32,7 +32,8 @@ internal class ContenedoresJsonWriterTest {
                 coordenadaY = 1.0f,
                 longitud = "1",
                 latitud = "1",
-                direccion = "calle 1")
+                direccion = "calle 1"
+            )
         )
 
         val writer = FileWriter("src/test/resources/writtenContenedores.json", JsonParserContenedores())
@@ -42,6 +43,6 @@ internal class ContenedoresJsonWriterTest {
         val file = File("src/test/resources/writtenContenedores.json")
         assert(file.exists())
         val contenedor: List<ContenedorDto> = Json.decodeFromString(file.readText())
-
+        //TODO ACABAR
     }
 }

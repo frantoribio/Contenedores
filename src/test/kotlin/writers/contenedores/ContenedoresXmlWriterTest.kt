@@ -1,9 +1,7 @@
 package writers.contenedores
 
 import dto.ContenedorDto
-import dto.ResiduoDto
 import extensions.toContenedorDto
-import extensions.toResiduoDto
 import kotlinx.serialization.decodeFromString
 import models.Contenedor
 import models.TipoContenedor
@@ -50,6 +48,6 @@ internal class ContenedoresXmlWriterTest {
         }
 
         val contenedor = xml.decodeFromString<List<ContenedorDto>>(file.inputStream().bufferedReader().readText())
-
+        //TODO ACABAR
     }
 }

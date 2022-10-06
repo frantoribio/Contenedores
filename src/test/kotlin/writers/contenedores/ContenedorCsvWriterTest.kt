@@ -15,7 +15,7 @@ internal class ContenedorCsvWriterTest {
         val writer = FileWriter("src/test/resources/writtenContenedores.csv", CsvParserContenedores())
         val content = sequenceOf(
             Contenedor(
-               codIntSitu = "1",
+                codIntSitu = "1",
                 tipoContenedor = TipoContenedor.ORGANICA,
                 modelo = "caca",
                 descripModelo = "caca",
@@ -44,5 +44,6 @@ internal class ContenedorCsvWriterTest {
         //assert(lines.isNotEmpty())
         //assert(lines[0] == "")
         //assert(lines[1] == "")
+        //TODO ACABAR
     }
 }

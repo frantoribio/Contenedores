@@ -1,20 +1,11 @@
 [
     {
-        "codIntSitu": "1",
-        "tipoContenedor": "ORGÁNICA",
-        "modelo": "caca",
-        "descripModelo": "caca",
-        "cantidadContenedores": 1,
-        "lote": 1,
-        "distrito": "madrid",
-        "barrio": "barrio",
-        "tipoVia": "calle",
-        "nombreVia": "calle",
-        "numVia": 1,
-        "coordenadaX": 1.0,
-        "coordenadaY": 1.0,
-        "longitud": "1",
-        "latitud": "1",
-        "direccion": "calle 1"
+        "ano": "1",
+        "mes": "enero",
+        "lote": 2,
+        "residuo": "caca",
+        "distrito": 1,
+        "nombreDistrito": "madrid",
+        "toneladas": 5.2
     }
 ]

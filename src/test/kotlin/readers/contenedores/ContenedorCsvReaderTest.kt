@@ -16,6 +16,7 @@ internal class ContenedorCsvReaderTest {
         val reader = FileReader("src/test/resources/contenedores.csv", CsvParserContenedores())
         val data = reader.read().toContenedor()
         val expected = data.firstOrNull()
+        //TODO ACABAR
     }
 
     @Test
