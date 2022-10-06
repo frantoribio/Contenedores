@@ -31,6 +31,4 @@ class ContenedoresFileWriter(private var path: String) : Writer<ContenedorDto> {
         jsonWriterContenedores.write(content)
         xmlWriterContenedores.write(content)
     }
-
-
 }

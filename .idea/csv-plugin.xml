@@ -17,7 +17,21 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\src\test\resources\badContenedores.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value=";" />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\src\test\resources\badResiduos.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value=";" />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\src\test\resources\contenedores.csv">
           <value>
             <Attribute>
               <option name="separator" value=";" />

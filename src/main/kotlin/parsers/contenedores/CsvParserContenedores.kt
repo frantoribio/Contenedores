@@ -44,7 +44,7 @@ class CsvParserContenedores : Parser<ContenedorDto> {
                 distrito = distrito?.ifBlank { throw CsvException("El distrito no puede quedar vacío") }
                     ?: throw CsvException("El distrito no puede ser nulo"),
 
-                barrio = barrio?.ifBlank { throw CsvException("El barrio no puede quedar vacío") }
+                barrio = barrio?.ifBlank { "" }
                     ?: throw CsvException("El barrio no puede ser nulo"),
 
                 tipoVia = tipoVia?.ifBlank { throw CsvException("El tipo de vía no puede quedar vacía") }
@@ -56,17 +56,17 @@ class CsvParserContenedores : Parser<ContenedorDto> {
                 numVia = numVia?.toIntOrNull()
                     ?: throw CsvException("El numero de vía no es un número"),
 
-                coordenadaX = coordenadaX?.toLongOrNull()
+                coordenadaX = coordenadaX?.toFloatOrNull()
                     ?: throw CsvException("La coordenada no es un número"),
 
-                coordenadaY = coordenadaY?.toLongOrNull()
+                coordenadaY = coordenadaY?.toFloatOrNull()
                     ?: throw CsvException("La coordenada no es un número"),
 
-                longitud = longitud?.toIntOrNull()
-                    ?: throw CsvException("La longitud no es un número"),
+                longitud = longitud?.ifBlank { throw CsvException("La longitud no puede quedar vacía") }
+                    ?: throw CsvException("La longitud no es un número separado por punto"),
 
-                latitud = latitud?.toIntOrNull()
-                    ?: throw CsvException("La latitud no es un número"),
+                latitud = latitud?.ifBlank { throw CsvException("La latitud no puede quedar vacía") }
+                    ?: throw CsvException("La latitud no es un número separado por punto"),
 
                 direccion = direccion?.ifBlank { throw CsvException("La dirección no puede quedar vacía") }
                     ?: throw CsvException("El dirección no puede ser nula")
