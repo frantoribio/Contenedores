@@ -1,7 +1,5 @@
 import args.ArgsParser
 import args.Opcion
-import controllers.ResumenController
-import extensions.toContenedor
 import parsers.contenedores.CsvParserContenedores
 import parsers.residuos.CsvParserResiduos
 import readers.FileReader
@@ -21,7 +19,7 @@ fun main(args: Array<String>) {
         }
 
         is Opcion.OpcionResumen -> {
-            val controller = ResumenController().getResumen(contenedoresFileReader.read().toContenedor())
+            //val controller = ResumenController().getResumen(contenedoresFileReader.read().toContenedor())
         }
     }
 }

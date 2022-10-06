@@ -1,13 +1,13 @@
 package controllers
 
-import models.Contenedor
-import models.Resumen
 
 class ResumenController {
-    fun getResumen(contenedores: Sequence<Contenedor>): Resumen {
-        val distritos = contenedores.groupBy { it.distrito }.map {
-            it.key to it.value.map { contenedores -> contenedores.tipoContenedor }.count()
-        }
-        TODO()
-    }
+    /*    fun getResumen(contenedores: Sequence<Contenedor>): Resumen {
+            val distritos: TipoContenedoresPorDistrito = contenedores
+                .groupBy { it.distrito }
+                .map { grupo -> grupo.key to grupo.value.groupBy { it.tipoContenedor }.map { contenedo } }
+
+
+        }*/
+
 }

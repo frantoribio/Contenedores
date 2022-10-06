@@ -12,8 +12,9 @@ import java.io.OutputStream
  */
 
 class CsvParserResiduos : Parser<ResiduoDto> {
+    private val firstLine = "Año;Mes;Lote;Residuo;Distrito;Nombre Distrito;Toneladas"
     override fun parse(input: InputStream): Sequence<ResiduoDto> =
-        input.bufferedReader().lineSequence().drop(1).map { line ->
+        input.bufferedReader(Charsets.UTF_8).lineSequence().filterFirstLine(firstLine).drop(1).map { line ->
             val (ano, mes, lote, residuo, distrito, nombreDistrito, toneladas) = line.split(';')
 
             ResiduoDto(
@@ -51,4 +52,6 @@ class CsvParserResiduos : Parser<ResiduoDto> {
 
             flush()
         }
+
+
 }

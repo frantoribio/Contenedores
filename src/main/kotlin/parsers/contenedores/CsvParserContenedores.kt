@@ -13,8 +13,11 @@ import java.io.OutputStream
  */
 
 class CsvParserContenedores : Parser<ContenedorDto> {
+    private val firstLine =
+        "Código Interno del Situad;Tipo Contenedor;Modelo;Descripcion Modelo;Cantidad;Lote;Distrito;Barrio;Tipo Vía;Nombre;Número;COORDENADA X;COORDENADA Y;LONGITUD;LATITUD;DIRECCION"
+
     override fun parse(input: InputStream): Sequence<ContenedorDto> =
-        input.bufferedReader().lineSequence().drop(1).map { line ->
+        input.bufferedReader().lineSequence().filterFirstLine(firstLine).drop(1).map { line ->
 
             val (codIntSitu, tipoContenedor, modelo, descripModelo,
                 cantidadContenedores, lote, distrito, barrio, tipoVia, nombreVia,
