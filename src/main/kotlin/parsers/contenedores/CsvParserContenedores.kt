@@ -75,7 +75,7 @@ class CsvParserContenedores : Parser<ContenedorDto> {
     override fun unParse(input: Sequence<ContenedorDto>, outputStream: OutputStream) =
         outputStream.bufferedWriter().run {
             appendLine(
-                "CodigoSituado;TipoContenedor;Modelo;Descripcion;Cantidad;Lote;Distrito;Barrio" +
+                "CodigoSituado;TipoContenedor;Modelo;Descripcion;Cantidad;Lote;Distrito;Barrio;" +
                         "TipoVia;Nombre;Numero;CoordenadaX;CoordenadaY;Longitud;Latitud;Direccion"
             )
             input.map { contenedores ->
