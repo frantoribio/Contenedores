@@ -15,24 +15,22 @@ internal class ContenedorCsvWriterTest {
         val writer = FileWriter("src/test/resources/writtenContenedores.csv", CsvParserContenedores())
         val content = sequenceOf(
             Contenedor(
-                codIntSitu = "1",
-                tipoContenedor = TipoContenedor.ORGANICA,
-                modelo = "caca",
-                descripModelo = "caca",
-                cantidadContenedores = 1,
-                lote = 1,
-                distrito = "madrid",
-                barrio = "barrio",
-                tipoVia = "calle",
-                nombreVia = "calle",
-                numVia = 1,
-                coordenadaX = 1.0f,
-                coordenadaY = 1.0f,
-                longitud = "1",
-                latitud = "1",
-                direccion = "calle 1"
-
-
+                "1",
+                TipoContenedor.RESTO,
+                "caca",
+                "caca",
+                1,
+                1,
+                "madrid",
+                "barrio",
+                "calle",
+                "calle",
+                1,
+                1.0f,
+                1.0f,
+                "1",
+                "1",
+                "calle 1"
             )
         )
 
@@ -41,9 +39,7 @@ internal class ContenedorCsvWriterTest {
         val file = File("src/test/resources/writtenContenedores.csv")
         assert(file.exists())
         val lines = file.readLines()
-        //assert(lines.isNotEmpty())
-        //assert(lines[0] == "")
-        //assert(lines[1] == "")
-        //TODO ACABAR
+        assert(lines.isNotEmpty())
+        assert(lines[1] == "1;RESTO;caca;caca;1;1;madrid;barrio;calle;calle;1;1.0;1.0;1;1;calle 1")
     }
 }

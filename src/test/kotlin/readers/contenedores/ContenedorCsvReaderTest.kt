@@ -2,6 +2,7 @@ package readers.contenedores
 
 import exceptions.CsvException
 import extensions.toContenedor
+import models.TipoContenedor
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import parsers.contenedores.CsvParserContenedores
@@ -17,7 +18,10 @@ internal class ContenedorCsvReaderTest {
         val data = reader.read().toContenedor()
         val expected = data.firstOrNull()
 
-        //TODO ACABAR
+        assert(data.count() == 43637)
+        assert(expected?.codIntSitu=="181193")
+        assert(expected?.tipoContenedor== TipoContenedor.RESTO)
+        assert(expected?.modelo=="CL_18")
     }
 
     @Test

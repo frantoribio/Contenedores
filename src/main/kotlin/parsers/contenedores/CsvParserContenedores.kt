@@ -13,16 +13,12 @@ import java.io.OutputStream
  */
 
 class CsvParserContenedores : Parser<ContenedorDto> {
-    private val firstLine =
-        "Código Interno del Situad;Tipo Contenedor;Modelo;Descripcion Modelo;Cantidad;Lote;Distrito;Barrio;Tipo Vía;Nombre;Número;COORDENADA X;COORDENADA Y;LONGITUD;LATITUD;DIRECCION"
+    private val firstLine = "Código Interno del Situad;Tipo Contenedor;Modelo;Descripcion Modelo;Cantidad;Lote;Distrito;Barrio;Tipo Vía;Nombre;Número;COORDENADA X;COORDENADA Y;LONGITUD;LATITUD;DIRECCION"
 
     override fun parse(input: InputStream): Sequence<ContenedorDto> =
         input.bufferedReader().lineSequence().filterFirstLine(firstLine).drop(1).map { line ->
 
-            val (codIntSitu, tipoContenedor, modelo, descripModelo,
-                cantidadContenedores, lote, distrito, barrio, tipoVia, nombreVia,
-                numVia, coordenadaX, coordenadaY, latitud, longitud, direccion
-            ) = line.split(';')
+            val (codIntSitu, tipoContenedor, modelo, descripModelo, cantidadContenedores, lote, distrito, barrio, tipoVia, nombreVia, numVia, coordenadaX, coordenadaY, longitud, latitud, direccion) = line.split(';')
 
             ContenedorDto(
 
@@ -79,7 +75,7 @@ class CsvParserContenedores : Parser<ContenedorDto> {
     override fun unParse(input: Sequence<ContenedorDto>, outputStream: OutputStream) =
         outputStream.bufferedWriter().run {
             appendLine(
-                "CodigoSituado;TipoContenedor;Modelo;Descripcion;Cantidad;Lote;Distrito;" +
+                "CodigoSituado;TipoContenedor;Modelo;Descripcion;Cantidad;Lote;Distrito;Barrio" +
                         "TipoVia;Nombre;Numero;CoordenadaX;CoordenadaY;Longitud;Latitud;Direccion"
             )
             input.map { contenedores ->
@@ -90,5 +86,7 @@ class CsvParserContenedores : Parser<ContenedorDto> {
                         "${contenedores.latitud};${contenedores.direccion}"
 
             }.forEach { appendLine(it) }
+
+            flush()
         }
 }
