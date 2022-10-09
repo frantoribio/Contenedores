@@ -5,7 +5,7 @@ import java.io.File
 import java.io.File.separator
 import java.util.concurrent.CompletableFuture
 
-class NamedFileWriter<T>(private var path: String, private vararg val parsers: NamedParser<T>) : Writer<T> {
+class DirectoryWriter<T>(private var path: String, private vararg val parsers: NamedParser<T>) : Writer<T> {
     init {
         path = File(path)
             .apply { if (isFile) throw IllegalArgumentException("El directorio destino no puede ser un archivo") }

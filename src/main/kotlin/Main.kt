@@ -9,8 +9,8 @@ import parsers.contenedores.XmlParserContenedores
 import parsers.residuos.CsvParserResiduos
 import parsers.residuos.JsonParserResiduos
 import parsers.residuos.XmlParserResiduos
-import readers.CsvFileReader
-import writers.NamedFileWriter
+import readers.CsvDirectoryReader
+import writers.DirectoryWriter
 
 fun main(args: Array<String>) {
     val opcion = ArgsParser(args).parse()
@@ -25,21 +25,21 @@ fun main(args: Array<String>) {
 }
 
 private fun writeParser(opcion: Opcion) {
-    val residuosFileWriter = NamedFileWriter(
+    val residuosFileWriter = DirectoryWriter(
         opcion.directorioOrigen,
         JsonParserResiduos() named "residuos.json",
         XmlParserResiduos() named "residuos.xml"
     )
 
-    val contenedoresFileWriter = NamedFileWriter(
+    val contenedoresFileWriter = DirectoryWriter(
         opcion.directorioOrigen,
         JsonParserContenedores() named "contenedores.json",
         XmlParserContenedores() named "contenedores.xml"
     )
 
 
-    val residuosCsvFileReader = CsvFileReader(opcion.directorioOrigen, CsvParserResiduos())
-    val contenedoresFileReader = CsvFileReader(opcion.directorioOrigen, CsvParserContenedores())
+    val residuosCsvFileReader = CsvDirectoryReader(opcion.directorioOrigen, CsvParserResiduos())
+    val contenedoresFileReader = CsvDirectoryReader(opcion.directorioOrigen, CsvParserContenedores())
 
     residuosFileWriter.write(residuosCsvFileReader.read())
     contenedoresFileWriter.write(contenedoresFileReader.read())

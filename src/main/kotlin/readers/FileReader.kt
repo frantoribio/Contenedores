@@ -8,6 +8,7 @@ class FileReader<T>(private val path: String, private val parser: Parser<T>) : R
 
     override fun read(): Sequence<T> = sequence {
         File(path)
+            .apply { if (isDirectory) throw IllegalArgumentException("El archivo origen no puede ser un directorio") }
             .apply { if (!exists()) throw FileNotFoundException("File not found") }
             .inputStream()
             .use { yieldAll(parser.parse(it)) }

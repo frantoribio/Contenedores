@@ -4,7 +4,7 @@ import extensions.firstLine
 import parsers.CsvParser
 import java.io.File
 
-class CsvFileReader<T>(path: String, private val parser: CsvParser<T>) :
+class CsvDirectoryReader<T>(path: String, private val parser: CsvParser<T>) :
     Reader<T> {
 
     private var fileReader: FileReader<T>
