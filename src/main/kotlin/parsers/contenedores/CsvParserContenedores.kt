@@ -3,7 +3,7 @@ package parsers.contenedores
 import dto.ContenedorDto
 import exceptions.CsvException
 import extensions.*
-import parsers.Parser
+import parsers.CsvParser
 import java.io.InputStream
 import java.io.OutputStream
 
@@ -12,13 +12,18 @@ import java.io.OutputStream
  * maps all lines of the csv file to a Residuo lazy sequence
  */
 
-class CsvParserContenedores : Parser<ContenedorDto> {
-    private val firstLine = "Código Interno del Situad;Tipo Contenedor;Modelo;Descripcion Modelo;Cantidad;Lote;Distrito;Barrio;Tipo Vía;Nombre;Número;COORDENADA X;COORDENADA Y;LONGITUD;LATITUD;DIRECCION"
+
+class CsvParserContenedores : CsvParser<ContenedorDto> {
+    override val firstLine: String
+        get() = "Código Interno del Situad;Tipo Contenedor;Modelo;Descripcion Modelo;Cantidad;Lote;Distrito;Barrio;Tipo Vía;Nombre;Número;COORDENADA X;COORDENADA Y;LONGITUD;LATITUD;DIRECCION"
+
 
     override fun parse(input: InputStream): Sequence<ContenedorDto> =
         input.bufferedReader().lineSequence().filterFirstLine(firstLine).drop(1).map { line ->
 
-            val (codIntSitu, tipoContenedor, modelo, descripModelo, cantidadContenedores, lote, distrito, barrio, tipoVia, nombreVia, numVia, coordenadaX, coordenadaY, longitud, latitud, direccion) = line.split(';')
+            val (codIntSitu, tipoContenedor, modelo, descripModelo, cantidadContenedores, lote, distrito, barrio, tipoVia, nombreVia, numVia, coordenadaX, coordenadaY, longitud, latitud, direccion) = line.split(
+                ';'
+            )
 
             ContenedorDto(
 
