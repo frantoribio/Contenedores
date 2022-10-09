@@ -1,7 +1,7 @@
 import args.ArgsParser
 import args.Opcion
-import args.Opcion.OpcionParser
-import args.Opcion.OpcionResumen
+import args.OpcionParser
+import args.OpcionResumen
 import extensions.named
 import parsers.contenedores.CsvParserContenedores
 import parsers.contenedores.JsonParserContenedores
