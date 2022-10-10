@@ -6,6 +6,7 @@ import models.Contenedor
 import parsers.UnParser
 import java.io.OutputStream
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class HtmlUnParser : UnParser<Contenedor> {
     override val extension: String
@@ -18,7 +19,7 @@ class HtmlUnParser : UnParser<Contenedor> {
             }
             body {
                 h1 { +"Resumen de recogidas de basura y reciclaje de Madrid" }
-                h3 { "Fecha: ${LocalDateTime.now()}" }
+                h3 { +"Fecha: ${LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)}" }
                 h3 { +"Autores: Roberto Blázquez y Fran Toribio" }
                 h1 { +"Número de contenedores de cada tipo que hay en cada distrito" }
                 consulta1(input)
