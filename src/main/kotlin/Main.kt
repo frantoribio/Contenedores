@@ -2,9 +2,11 @@ import args.ArgsParser
 import args.Opcion
 import args.OpcionParser
 import args.OpcionResumen
+import extensions.toContenedor
 import parsers.contenedores.CsvParserContenedores
 import parsers.contenedores.JsonParserContenedores
 import parsers.contenedores.XmlParserContenedores
+import parsers.html.HtmlUnParser
 import parsers.residuos.CsvParserResiduos
 import parsers.residuos.JsonParserResiduos
 import parsers.residuos.XmlParserResiduos
@@ -49,4 +51,7 @@ private fun writeParser(opcion: Opcion) {
 
     residuosFileWriter.write(residuosCsvFileReader.read())
     contenedoresFileWriter.write(contenedoresFileReader.read())
+
+    //TESTING HTML
+    HtmlUnParser().unParse(contenedoresFileReader.read().toContenedor(), System.out)
 }

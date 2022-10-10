@@ -10,10 +10,9 @@ import java.time.LocalDateTime
 class HtmlUnParser : UnParser<Contenedor> {
     override val extension: String
         get() = ".html"
-    
+
     override fun unParse(input: Sequence<Contenedor>, outputStream: OutputStream) {
         outputStream.bufferedWriter().appendHTML().html {
-            val list = input.toList()
             head {
                 title { +"Resumen de recogidas de basura y reciclaje de Madrid" }
             }
@@ -22,13 +21,13 @@ class HtmlUnParser : UnParser<Contenedor> {
                 h3 { "Fecha: ${LocalDateTime.now()}" }
                 h3 { +"Autores: Roberto Blázquez y Fran Toribio" }
                 h1 { +"Número de contenedores de cada tipo que hay en cada distrito" }
-                consulta1(list)
+                consulta1(input)
                 h1 { +"Media de contenedores de cada tipo que " }
             }
-        }
+        }.flush()
     }
 
-    private fun BODY.consulta1(list: List<Contenedor>) {
+    private fun BODY.consulta1(list: Sequence<Contenedor>) {
         list.groupBy {
             it.distrito
         }.forEach {
