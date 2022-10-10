@@ -7,7 +7,7 @@ import java.io.File
 class CsvDirectoryReader<T>(path: String, private val parser: CsvParser<T>) :
     Reader<T> {
 
-    private var fileReader: FileReader<T>
+    private val fileReader: FileReader<T>
 
     init {
         val csvFiles = File(path)
