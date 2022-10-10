@@ -2,7 +2,6 @@ import args.ArgsParser
 import args.Opcion
 import args.OpcionParser
 import args.OpcionResumen
-import extensions.named
 import parsers.contenedores.CsvParserContenedores
 import parsers.contenedores.JsonParserContenedores
 import parsers.contenedores.XmlParserContenedores
@@ -27,19 +26,21 @@ fun main(args: Array<String>) {
 private fun writeParser(opcion: Opcion) {
     val csvParserContenedores = CsvParserContenedores()
     val csvParserResiduos = CsvParserResiduos()
-    
+
     val residuosFileWriter = DirectoryWriter(
         opcion.directorioDestino,
-        JsonParserResiduos() named "residuos.json",
-        XmlParserResiduos() named "residuos.xml",
-        csvParserResiduos named "residuos.csv"
+        "residuos",
+        JsonParserResiduos(),
+        XmlParserResiduos(),
+        csvParserResiduos
     )
 
     val contenedoresFileWriter = DirectoryWriter(
         opcion.directorioDestino,
-        JsonParserContenedores() named "contenedores.json",
-        XmlParserContenedores() named "contenedores.xml",
-        csvParserContenedores named "contenedores.csv"
+        "contenedores",
+        JsonParserContenedores(),
+        XmlParserContenedores(),
+        csvParserContenedores
     )
 
 

@@ -3,7 +3,7 @@ package parsers.residuos
 import dto.ResiduoDto
 import exceptions.CsvException
 import extensions.*
-import parsers.CsvParser
+import parsers.formats.CsvParser
 import java.io.InputStream
 import java.io.OutputStream
 

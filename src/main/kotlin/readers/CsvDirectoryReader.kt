@@ -1,7 +1,7 @@
 package readers
 
 import extensions.firstLine
-import parsers.CsvParser
+import parsers.formats.CsvParser
 import java.io.File
 
 class CsvDirectoryReader<T>(path: String, private val parser: CsvParser<T>) :

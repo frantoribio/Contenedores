@@ -4,7 +4,7 @@ import dto.ResiduoDto
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import nl.adaptivity.xmlutil.serialization.XML
-import parsers.Parser
+import parsers.formats.XmlParser
 import java.io.InputStream
 import java.io.OutputStream
 
@@ -13,7 +13,7 @@ class XmlParserResiduos(
         autoPolymorphic = true
         indentString = "  "
     }
-) : Parser<ResiduoDto> {
+) : XmlParser<ResiduoDto> {
     override fun parse(input: InputStream): Sequence<ResiduoDto> =
         xml.decodeFromString<List<ResiduoDto>>(input.reader().readText()).asSequence()
 

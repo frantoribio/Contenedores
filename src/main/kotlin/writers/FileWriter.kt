@@ -1,10 +1,10 @@
 package writers
 
-import parsers.Parser
+import parsers.UnParser
 import java.io.File
 import java.nio.file.Files
 
-class FileWriter<T>(path: String, private val parser: Parser<T>) : Writer<T> {
+class FileWriter<T>(path: String, private val parser: UnParser<T>) : Writer<T> {
     private val file = File(path)
     override fun write(content: Sequence<T>) = file
         .apply { if (isDirectory) throw IllegalArgumentException("El archivo destino no puede ser un directorio") }

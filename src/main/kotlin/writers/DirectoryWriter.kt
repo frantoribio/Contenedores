@@ -1,11 +1,13 @@
 package writers
 
-import parsers.NamedParser
+import parsers.UnParser
 import java.io.File
 import java.io.File.separator
+import java.util.*
 import java.util.concurrent.CompletableFuture
 
-class DirectoryWriter<T>(private var path: String, vararg parsers: NamedParser<T>) : Writer<T> {
+class DirectoryWriter<T>(private var path: String, private val fileName: String, vararg parsers: UnParser<T>) :
+    Writer<T> {
     private val fileWriters = mutableListOf<FileWriter<T>>()
 
     init {
@@ -15,7 +17,14 @@ class DirectoryWriter<T>(private var path: String, vararg parsers: NamedParser<T
             .apply { isDirectory || mkdirs() }
             .path
 
-        parsers.forEach { parser -> fileWriters.add(FileWriter("$path$separator${parser.name}", parser)) }
+        parsers.forEach { parser ->
+            fileWriters.add(
+                FileWriter(
+                    "$path$separator${fileName + UUID.randomUUID() + parser.extension}",
+                    parser
+                )
+            )
+        }
     }
 
     override fun write(content: Sequence<T>) {
