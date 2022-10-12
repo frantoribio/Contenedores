@@ -31,61 +31,87 @@ class HtmlUnParser : UnParser<Consulta> {
         outputStream.bufferedWriter().appendHTML().html {
             head {
                 title { +"Resumen de recogidas de basura y reciclaje de Madrid" }
+                link {
+                    href = " \thttps://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"; rel =
+                    "stylesheet"; attributes["crossorigin"] = "anonymous"
+                }
             }
             body {
-                h1 { +"Resumen de recogidas de basura y reciclaje de Madrid" }
-                h3 { +"Fecha: ${LocalDateTime.now().format(ISO_LOCAL_DATE_TIME)}" }
-                h3 { +"Autores: Roberto Blázquez y Fran Toribio" }
-                h1 { +"Número de contenedores de cada tipo que hay en cada distrito" }
-                consulta1(contenedoresDf)
-                h1 { +"Media de contenedores de cada tipo que hay en cada distrito" }
-                consulta2(contenedoresDf)
-                h1 { +"Gráfico con el total de contenedores por distrito" }
-                consulta3(contenedoresDf)
-                h1 { +" Media de toneladas anuales de recogidas por cada tipo de basura agrupadas por distrito" }
-                consulta4(residuosDf)
-                h1 { +"Gráfico de media de toneladas mensuales de recogida de basura por distrito" }
-                consulta5(residuosDf)
-                h1 { +"Máximo, mínimo , media y desviación de toneladas anuales de recogidas por cada tipo de basura agrupadas por distrito" }
-                consulta6(residuosDf)
-                h1 { +"- Suma de todo lo recogido en un año por distrito" }
-                consulta7(residuosDf)
-                h1 { +"Por cada distrito obtener para cada tipo de residuo la cantidad recogida" }
-                consulta8(residuosDf)
+
+                nav("navbar navbar-dark bg-primary") {
+                    div("container-fluid") {
+                        span("navbar-brand mb-0 h1") { +"Resumen de recogidas de basura y reciclaje de Madrid" }
+                        span("navbar-brand mb-0 h1") {
+                            +"Fecha de consulta: ${
+                                LocalDateTime.now().format(ISO_LOCAL_DATE_TIME)
+                            }"
+                        }
+                        span("navbar-brand mb-0 h1") { +"Autores: Roberto Blázquez y Fran Toribio" }
+                    }
+                }
+
+                div("container-fluid d-flex flex-column align-items-center text-center justify-content-center") {
+                    titleInfo("Número de contenedores de cada tipo que hay en cada distrito")
+                    consulta1(contenedoresDf)
+                    titleInfo("Media de contenedores de cada tipo que hay en cada distrito")
+                    consulta2(contenedoresDf)
+                    titleInfo("Gráfico con el total de contenedores por distrito")
+                    consulta3(contenedoresDf)
+                    titleInfo("Media de toneladas anuales de recogidas por cada tipo de basura agrupadas por distrito")
+                    consulta4(residuosDf)
+                    titleInfo("Gráfico de media de toneladas mensuales de recogida de basura por distrito")
+                    consulta5(residuosDf)
+                    titleInfo("Máximo, mínimo , media y desviación de toneladas anuales de recogidas por cada tipo de basura agrupadas por distrito")
+                    consulta6(residuosDf)
+                    titleInfo("Suma de todo lo recogido en un año por distrito")
+                    consulta7(residuosDf)
+                    titleInfo("Por cada distrito obtener para cada tipo de residuo la cantidad recogida")
+                    consulta8(residuosDf)
+                }
+
 
                 p { +"Tiempo de ejecución: ${Duration.between(Instant.now(), start)}" }
+
+                script {
+                    src = " https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+                    attributes["crossorigin"] = "anonymous"
+                }
             }
         }.flush()
     }
 
-    private fun BODY.consulta1(list: DataFrame<ContenedorDto>) {
+    private fun DIV.consulta1(list: DataFrame<ContenedorDto>) {
         val distritos = list.groupBy { distrito }
 
         distritos.forEach { distritoGroup ->
-            h2 { +distritoGroup.key.distrito }
             val html = distritoGroup.group.groupBy { tipoContenedor }.aggregate { tipoContenedorGroup ->
                 tipoContenedorGroup.sumOf { cantidadContenedores } into "cantidad contenedores"
             }.toHtmlFormatted()
 
-            unsafe { +html }
+            div("card card border-info m-5 w-50") {
+                div("card-header") { +distritoGroup.key.distrito }
+                div("card-body mx-auto") { unsafe { +html } }
+            }
         }
     }
 
     //Solo Dios sabe que hay que hacer aqui
-    private fun BODY.consulta2(list: DataFrame<ContenedorDto>) {
+    private fun DIV.consulta2(list: DataFrame<ContenedorDto>) {
         val distritos = list.groupBy { distrito }
 
         distritos.forEach { distritoGroup ->
-            h2 { +distritoGroup.key.distrito }
             val html = distritoGroup.group.groupBy { tipoContenedor }.aggregate { tipoContenedorGroup ->
                 tipoContenedorGroup.mean { cantidadContenedores } into "media contenedores"
             }.toHtmlFormatted()
 
-            unsafe { +html }
+            div("card card border-info m-5 w-50") {
+                div("card-header") { +distritoGroup.key.distrito }
+                div("card-body mx-auto") { unsafe { +html } }
+            }
         }
     }
 
-    private fun BODY.consulta3(contenedores: DataFrame<ContenedorDto>) {
+    private fun DIV.consulta3(contenedores: DataFrame<ContenedorDto>) {
         //Agrupamos por distrito, mapeamos cada distrito a su suma de contenedores y luego los añadimos la cantidad de contenedores que tenga
         val distritos = contenedores.groupBy { distrito }
 
@@ -108,11 +134,10 @@ class HtmlUnParser : UnParser<Consulta> {
         unsafe { +p.exportToHtml() }
     }
 
-    private fun BODY.consulta4(residuos: DataFrame<ResiduoDto>) {
+    private fun DIV.consulta4(residuos: DataFrame<ResiduoDto>) {
         val distritos = residuos.groupBy { nombreDistrito }
 
         distritos.forEach { distritoGroup ->
-            h2 { +distritoGroup.key.nombreDistrito }
             val html =
                 distritoGroup.group
                     .groupBy { ano }
@@ -120,18 +145,19 @@ class HtmlUnParser : UnParser<Consulta> {
                         meanOf { toneladas } into "media toneladas anuales"
                     }.toHtmlFormatted()
 
-            unsafe { +html }
+            div("card card border-info m-5 w-50") {
+                div("card-header") { +distritoGroup.key.nombreDistrito }
+                div("card-body mx-auto") { unsafe { +html } }
+            }
         }
     }
 
-    private fun BODY.consulta5(residuos: DataFrame<ResiduoDto>) {
+    private fun DIV.consulta5(residuos: DataFrame<ResiduoDto>) {
         val distritos = residuos
             .groupBy { nombreDistrito }
 
 
         distritos.forEach { distrito ->
-            h2 { +"Distrito ${distrito.key.nombreDistrito}" }
-
             val distritosToToneladas = distrito.group.groupBy { mes }.map { fechaGroup ->
                 val list = mutableListOf<String>()
                 repeat(fechaGroup.group.meanOf { toneladas }.toInt()) {
@@ -149,15 +175,17 @@ class HtmlUnParser : UnParser<Consulta> {
                     ggsize(700, 350) +
                     ggtitle("Gráfico de media de toneladas mensuales de recogida de basura en ${distrito.key.nombreDistrito}")
 
-            unsafe { +p.exportToHtml() }
+            div("card card border-info m-5 w-50") {
+                div("card-header") { +distrito.key.nombreDistrito }
+                div("card-body mx-auto") { unsafe { +p.exportToHtml() } }
+            }
         }
     }
 
-    private fun BODY.consulta6(residuos: DataFrame<ResiduoDto>) {
+    private fun DIV.consulta6(residuos: DataFrame<ResiduoDto>) {
         val distritos = residuos.groupBy { it.nombreDistrito }
 
         distritos.forEach { distritoGrouped ->
-            h2 { +distritoGrouped.key.nombreDistrito }
             val html = distritoGrouped.group.groupBy { residuo; ano }.aggregate {
                 max { toneladas } into "max"
                 min { toneladas } into "min"
@@ -165,35 +193,48 @@ class HtmlUnParser : UnParser<Consulta> {
                 std { toneladas } into "desviacion"
             }.toHtmlFormatted()
 
-            unsafe { +html }
+            div("card card border-info m-5 w-50") {
+                div("card-header") { +distritoGrouped.key.nombreDistrito }
+                div("card-body mx-auto") { unsafe { +html } }
+            }
         }
     }
 
-    private fun BODY.consulta7(residuosDf: DataFrame<ResiduoDto>) {
+    private fun DIV.consulta7(residuosDf: DataFrame<ResiduoDto>) {
         val distritos = residuosDf.groupBy { nombreDistrito }
 
         distritos.forEach { distritoGrouped ->
-            h2 { +distritoGrouped.key.nombreDistrito }
             val html = distritoGrouped.group.groupBy { ano }.aggregate {
                 sumOf { toneladas } into "suma"
             }.toHtmlFormatted()
 
-            unsafe { +html }
+            div("card card border-info m-5 w-50") {
+                div("card-header") { +distritoGrouped.key.nombreDistrito }
+                div("card-body mx-auto") { unsafe { +html } }
+            }
         }
     }
 
-    private fun BODY.consulta8(residuosDf: DataFrame<ResiduoDto>) {
+    private fun DIV.consulta8(residuosDf: DataFrame<ResiduoDto>) {
         val distritos = residuosDf.groupBy { nombreDistrito }
 
         distritos.forEach { distritoGrouped ->
-            h2 { +distritoGrouped.key.nombreDistrito }
             val html = distritoGrouped.group.groupBy { residuo }.aggregate {
                 sumOf { toneladas } into "suma"
             }.toHtmlFormatted()
 
-            unsafe { +html }
+            div("card card border-info m-5 w-50") {
+                div("card-header") { +distritoGrouped.key.nombreDistrito }
+                div("card-body mx-auto") { unsafe { +html } }
+            }
         }
+    }
 
+    private fun DIV.titleInfo(title: String) {
+        div("alert alert-primary mt-5") {
+            attributes["role"] = "alert"
+            h4("alert-heading") { +title }
+        }
     }
 }
 
