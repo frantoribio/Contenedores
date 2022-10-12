@@ -3,7 +3,6 @@ package models
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 import nl.adaptivity.xmlutil.serialization.XmlElement
-import parsers.xml.TipoOpcion
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -21,5 +20,10 @@ data class Bitacora(
     @XmlElement(true)
     @Contextual
     val tiempoEjecucion: Duration
-
 )
+
+enum class TipoOpcion(val tipo: String) {
+    PARSER("PARSER"),
+    RESUMENGLOBAL("RESUMENGLOBAL"),
+    RESUMENCIUDAD("RESUMENCIUDAD")
+}
