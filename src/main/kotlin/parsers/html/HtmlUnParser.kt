@@ -3,17 +3,22 @@ package parsers.html
 import extensions.exportToHtml
 import extensions.toContenedor
 import extensions.toResiduo
+import extensions.toSpanish
 import kotlinx.html.*
 import kotlinx.html.stream.appendHTML
 import models.Consulta
 import models.Contenedor
+import models.Residuo
 import org.jetbrains.letsPlot.geom.geomBar
 import org.jetbrains.letsPlot.ggsize
 import org.jetbrains.letsPlot.label.ggtitle
 import org.jetbrains.letsPlot.letsPlot
 import parsers.UnParser
 import java.io.OutputStream
+import java.time.Duration
+import java.time.Instant
 import java.time.LocalDateTime
+import java.time.Month
 import java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME
 
 class HtmlUnParser : UnParser<Consulta> {
@@ -23,6 +28,7 @@ class HtmlUnParser : UnParser<Consulta> {
     override fun unParse(input: Consulta, outputStream: OutputStream) {
         val contenedores = input.contenedores.toContenedor()
         val residuos = input.residuos.toResiduo()
+        val start = Instant.now()
 
         outputStream.bufferedWriter().appendHTML().html {
             head {
@@ -39,6 +45,13 @@ class HtmlUnParser : UnParser<Consulta> {
                 h1 { +"Gráfico con el total de contenedores por distrito" }
                 consulta3(contenedores)
                 h1 { +" Media de toneladas anuales de recogidas por cada tipo de basura agrupadas por distrito" }
+                consulta4(residuos)
+                h1 { +"Gráfico de media de toneladas mensuales de recogida de basura por distrito" }
+                consulta5(residuos)
+                h1 { +"Máximo, mínimo , media y desviación de toneladas anuales de recogidas por cada tipo de basura agrupadas por distrito" }
+                consulta6(residuos)
+
+                p { +"Tiempo de ejecución: ${Duration.between(Instant.now(), start)}" }
             }
         }.flush()
     }
@@ -70,7 +83,7 @@ class HtmlUnParser : UnParser<Consulta> {
         }
     }
 
-    private fun BODY.consulta3(list: Sequence<Contenedor>) = unsafe {
+    private fun BODY.consulta3(list: Sequence<Contenedor>) {
         //Agrupamos por distrito, mapeamos cada distrito a su suma de contenedores y luego los añadimos la cantidad de contenedores que tenga
         val distritos = list.groupBy { it.distrito }
             .map { distrito -> distrito.key to distrito.value.sumOf { it.cantidadContenedores } }
@@ -83,11 +96,89 @@ class HtmlUnParser : UnParser<Consulta> {
         val data = mapOf(
             "Distritos" to distritos
         )
-        var p = letsPlot(data)
-        p += geomBar(color = "dark_green", alpha = .3) { x = "Distritos" } +
+        val p = letsPlot(data) +
+                geomBar(color = "dark_green", alpha = .3) { x = "Distritos" } +
                 ggsize(700, 350) +
                 ggtitle("Gráfico con el total de contenedores por distrito")
 
-        +p.exportToHtml()
+        unsafe { +p.exportToHtml() }
+    }
+
+    private fun BODY.consulta4(residuos: Sequence<Residuo>) {
+        val distritos = residuos
+            .groupBy { it.nombreDistrito }
+            .map { distrito -> distrito.key to distrito.value.groupBy { it.residuo } }
+
+        distritos.forEach { distrito ->
+            p { +"Distrito ${distrito.first}" }
+            ul {
+                distrito.second.forEach { residuo ->
+                    li { +"${residuo.key}: ${residuo.value.map { it.toneladas }.average()}" }
+                }
+            }
+        }
+    }
+
+    private fun BODY.consulta5(residuos: Sequence<Residuo>) {
+        val distritos = residuos
+            .groupBy { it.nombreDistrito }
+
+
+        val centro =
+            residuos.filter { it.nombreDistrito.uppercase() == "CENTRO" }.filter { it.fecha.month == Month.JANUARY }
+                .map { it.toneladas }.average()
+
+
+        val medias = distritos.map { distrito ->
+            distrito.key to (distrito.value.groupBy { it.fecha.month.toSpanish() }
+                .flatMap { month ->
+                    val list = mutableListOf<String>()
+                    repeat(month.value.map { it.toneladas }.average().toInt()) { list.add(month.key) }
+                    list
+                })
+        }
+
+
+        medias.forEach { distrito ->
+            h2 { +"Distrito ${distrito.first}" }
+
+            val data = mapOf(
+                "Meses" to distrito.second.map { it }
+            )
+
+            val p = letsPlot(data) +
+                    geomBar(color = "dark_green", alpha = .3) { x = "Meses" } +
+                    ggsize(700, 350) +
+                    ggtitle("Gráfico de media de toneladas mensuales de recogida de basura en ${distrito.first}")
+
+            unsafe { +p.exportToHtml() }
+        }
+    }
+
+    private fun BODY.consulta6(residuos: Sequence<Residuo>) {
+
+        val distritos = residuos
+            .groupBy { it.nombreDistrito }
+
+        distritos.forEach { distrito ->
+            h2 { +"Distrito ${distrito.key}" }
+
+            distrito.value.groupBy { it.residuo }.forEach { residuo ->
+                p { +residuo.key }
+                ul {
+                    li { +"Media : ${residuo.value.map { it.toneladas }.average()}" }
+                    li { +"Max : ${residuo.value.maxOfOrNull { it.toneladas }}" }
+                    li { +"Min : ${residuo.value.minOfOrNull { it.toneladas }}" }
+                    //TODO: Desviacion
+                }
+            }
+        }
+
     }
 }
+
+
+
+
+
+

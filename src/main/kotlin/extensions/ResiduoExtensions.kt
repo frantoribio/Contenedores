@@ -9,7 +9,7 @@ import java.util.*
 fun ResiduoDto.toResiduo(): Residuo {
     val fecha = LocalDate.of(
         ano.toInt(),
-        mes.parse(),
+        mes.toMonth(),
         1
     )
     return Residuo(fecha, lote, residuo, distrito, nombreDistrito, toneladas)
@@ -19,7 +19,7 @@ fun ResiduoDto.toResiduo(): Residuo {
 fun Residuo.toResiduoDto(): ResiduoDto {
     return ResiduoDto(
         fecha.year.toString(),
-        fecha.month.parse(),
+        fecha.month.toSpanish(),
         lote,
         residuo,
         distrito,
@@ -37,7 +37,7 @@ fun Sequence<Residuo>.toResiduoDto(): Sequence<ResiduoDto> = map {
 }
 
 
-private fun String.parse(): Month {
+fun String.toMonth(): Month {
     return when (this.lowercase(Locale.getDefault())) {
         "enero" -> Month.JANUARY
         "febrero" -> Month.FEBRUARY
@@ -56,7 +56,7 @@ private fun String.parse(): Month {
 }
 
 //reverse parse
-private fun Month.parse(): String {
+fun Month.toSpanish(): String {
     return when (this) {
         Month.JANUARY -> "enero"
         Month.FEBRUARY -> "febrero"
