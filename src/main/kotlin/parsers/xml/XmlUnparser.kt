@@ -1,12 +1,12 @@
 package parsers.xml
 
 import models.Bitacora
+import nl.adaptivity.xmlutil.serialization.XML
 import parsers.UnParser
 import java.io.OutputStream
-import nl.adaptivity.xmlutil.serialization.XML
 
 
-class XmlUnparser : UnParser<Bitacora> {
+class BitacoraUnparser : UnParser<Bitacora> {
     override val extension: String
         get() = ".xml"
 
