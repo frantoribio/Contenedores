@@ -108,7 +108,7 @@ class HtmlDistritoExporter : IHtmlExporter<ConsultaDistrito> {
         val distritosToToneladas = distritos.groupBy { residuo }.map { fechaGroup ->
             val list = mutableListOf<String>()
             repeat(fechaGroup.group.sumOf { toneladas }.toInt()) {
-                list.add(fechaGroup.key.mes)
+                list.add(fechaGroup.key.residuo)
             }
             list
         }.flatten()
@@ -118,8 +118,8 @@ class HtmlDistritoExporter : IHtmlExporter<ConsultaDistrito> {
         )
 
         val p = letsPlot(data) +
-                geomBar(color = "dark_green", alpha = .3) { x = "Meses" } +
-                ggtitle("Gráfico de suma de toneladas por residuo en ${distrito}")
+                geomBar(color = "dark_green", alpha = .3) { x = "Toneladas" } +
+                ggtitle("Gráfico de suma de toneladas por residuo en $distrito")
 
         div("card card border-info m-5 w-50") {
             div("card-header") { +distrito }
@@ -132,16 +132,15 @@ class HtmlDistritoExporter : IHtmlExporter<ConsultaDistrito> {
             .filter { nombreDistrito.clear == distrito }
 
         distritos.groupBy { mes }.forEach {
-            p { it.key.mes }
             val html = it.group.groupBy { residuo }.aggregate {
-                sumOf { toneladas } into "suma"
-                minOf { toneladas } into "minimo"
-                maxOf { toneladas } into "maximo"
-                stdOf { toneladas } into "desviacion"
+                mean { toneladas } into "media"
+                min { toneladas } into "minimo"
+                max { toneladas } into "maximo"
+                std { toneladas } into "desviacion"
             }.toHtmlFormatted()
 
             div("card card border-info m-5 w-50") {
-                div("card-header") { +distrito }
+                div("card-header") { +"$distrito ${it.key.mes.uppercase()}" }
                 div("card-body mx-auto") { unsafe { +html } }
             }
 
@@ -161,11 +160,11 @@ class HtmlDistritoExporter : IHtmlExporter<ConsultaDistrito> {
         }.flatten()
 
         val data = mapOf(
-            "Meses" to distritosToToneladas
+            "Toneladas" to distritosToToneladas
         )
 
         val p = letsPlot(data) +
-                geomBar(color = "dark_green", alpha = .3) { x = "Meses" } +
+                geomBar(color = "dark_green", alpha = .3) { x = "Toneladas" } +
                 ggtitle("Gráfico de media de toneladas mensuales de recogida de basura en $distrito")
 
         div("card card border-info m-5 w-50") {
