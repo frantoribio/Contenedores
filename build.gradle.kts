@@ -32,6 +32,7 @@ dependencies {
     implementation("org.jetbrains.lets-plot:lets-plot-common:2.5.0")
     implementation("org.jetbrains.lets-plot:lets-plot-kotlin-jvm:4.1.0")
     implementation("org.jetbrains.kotlinx:dataframe:0.8.1")
+    implementation("org.apache.commons:commons-lang3:3.12.0")
 
 }
 

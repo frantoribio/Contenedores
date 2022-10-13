@@ -3,9 +3,12 @@ import args.Opcion
 import args.OpcionParser
 import args.OpcionResumen
 import models.Consulta
+import models.ConsultaDistrito
+import org.apache.commons.lang3.StringUtils
 import parsers.contenedores.CsvParserContenedores
 import parsers.contenedores.JsonParserContenedores
 import parsers.contenedores.XmlParserContenedores
+import parsers.html.HtmlDistritoUnParser
 import parsers.html.HtmlUnParser
 import parsers.residuos.CsvParserResiduos
 import parsers.residuos.JsonParserResiduos
@@ -19,11 +22,16 @@ fun main(args: Array<String>) {
 
     when (val opcion = ArgsParser(args).parse()) {
         is OpcionParser -> writeParser(opcion)
-        is OpcionResumen -> writeResumen(opcion)
+        is OpcionResumen -> handleResumen(opcion)
     }
 }
 
-fun writeResumen(opcion: Opcion) {
+fun handleResumen(opcion: OpcionResumen) {
+    if (opcion.distrito == null) writeResumen(opcion)
+    else writeResumenDistrito(opcion)
+}
+
+fun writeResumen(opcion: OpcionResumen) {
     val residuosFuture = supplyAsync { CsvDirectoryReader(opcion.directorioOrigen, CsvParserResiduos()).read() }
     val contenedoresFuture = supplyAsync { CsvDirectoryReader(opcion.directorioOrigen, CsvParserContenedores()).read() }
 
@@ -32,7 +40,21 @@ fun writeResumen(opcion: Opcion) {
     DirectoryWriter(opcion.directorioOrigen, "resumen", HtmlUnParser()).write(consulta)
 }
 
-private fun writeParser(opcion: Opcion) {
+fun writeResumenDistrito(opcion: OpcionResumen) {
+    val residuosFuture = supplyAsync { CsvDirectoryReader(opcion.directorioOrigen, CsvParserResiduos()).read() }
+    val contenedoresFuture = supplyAsync { CsvDirectoryReader(opcion.directorioOrigen, CsvParserContenedores()).read() }
+
+    val consulta =
+        ConsultaDistrito(
+            contenedoresFuture.get(),
+            residuosFuture.get(),
+            StringUtils.stripAccents(opcion.distrito).uppercase()
+        )
+
+    DirectoryWriter(opcion.directorioOrigen, "resumen${opcion.distrito}", HtmlDistritoUnParser()).write(consulta)
+}
+
+fun writeParser(opcion: Opcion) {
     val csvParserContenedores = CsvParserContenedores()
     val csvParserResiduos = CsvParserResiduos()
 
