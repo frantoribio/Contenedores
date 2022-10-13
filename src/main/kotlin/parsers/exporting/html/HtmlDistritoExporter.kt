@@ -148,16 +148,36 @@ class HtmlDistritoExporter : IHtmlExporter<ConsultaDistrito> {
 
         val distritosToToneladas = distritos.groupBy { mes }.aggregate {
             mean { toneladas } into "media"
+            max { toneladas } into "maximo"
+            min { toneladas } into "minimo"
         }.toMap()
 
         val p = letsPlot(distritosToToneladas) +
-                geomBar(stat = Stat.identity, color = "dark_green", alpha = .3) { x = "Mes"; y = "media" } +
+                geomBar(stat = Stat.identity, color = "dark_green", alpha = .3) { x = "Mes"; y = "maximo" } +
                 ggtitle("Gráfico de media de toneladas mensuales de recogida de basura en $distrito")
 
         div("card card border-info m-5 w-50") {
             div("card-header") { +distrito }
             div("card-body mx-auto") { unsafe { +p.exportToHtml() } }
         }
+        val p2 = letsPlot(distritosToToneladas) +
+                geomBar(stat = Stat.identity, color = "dark_green", alpha = .3) { x = "Mes"; y = "minimo" } +
+                ggtitle("Gráfico de media de toneladas mensuales de recogida de basura en $distrito")
+
+        div("card card border-info m-5 w-50") {
+            div("card-header") { +distrito }
+            div("card-body mx-auto") { unsafe { +p2.exportToHtml() } }
+        }
+
+        val p3 = letsPlot(distritosToToneladas) +
+                geomBar(stat = Stat.identity, color = "dark_green", alpha = .3) { x = "Mes"; y = "media" } +
+                ggtitle("Gráfico de media de toneladas mensuales de recogida de basura en $distrito")
+
+        div("card card border-info m-5 w-50") {
+            div("card-header") { +distrito }
+            div("card-body mx-auto") { unsafe { +p3.exportToHtml() } }
+        }
+
     }
 
     private fun DIV.titleInfo(title: String) {
