@@ -6,7 +6,7 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import models.Residuo
 import org.junit.jupiter.api.Test
-import parsers.residuos.JsonParserResiduos
+import parsers.importing.residuos.JsonImporterResiduos
 import writers.FileWriter
 import java.io.File
 import java.time.LocalDate
@@ -28,7 +28,7 @@ internal class ResiduosJsonWriterTest {
             )
         )
 
-        val writer = FileWriter("src/test/resources/written.json", JsonParserResiduos())
+        val writer = FileWriter("src/test/resources/written.json", JsonImporterResiduos())
 
         writer.write(content.toResiduoDto())
 

@@ -1,10 +1,10 @@
 package readers
 
-import aliases.CsvSequenceParser
+import aliases.CsvSequenceImporter
 import extensions.firstLine
 import java.io.File
 
-class CsvDirectoryReader<T>(path: String, private val parser: CsvSequenceParser<T>) : Reader<T> {
+class CsvDirectoryReader<T>(path: String, private val parser: CsvSequenceImporter<T>) {
 
     private val fileReader: FileReader<T>
 
@@ -22,5 +22,5 @@ class CsvDirectoryReader<T>(path: String, private val parser: CsvSequenceParser<
         fileReader = FileReader(file.first.path, parser)
     }
 
-    override fun read(): Sequence<T> = fileReader.read()
+    fun read(): Sequence<T> = fileReader.read()
 }

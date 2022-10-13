@@ -5,14 +5,16 @@ import args.OpcionResumen
 import models.Consulta
 import models.ConsultaDistrito
 import org.apache.commons.lang3.StringUtils
-import parsers.contenedores.CsvParserContenedores
-import parsers.contenedores.JsonParserContenedores
-import parsers.contenedores.XmlParserContenedores
-import parsers.html.HtmlDistritoUnParser
-import parsers.html.HtmlUnParser
-import parsers.residuos.CsvParserResiduos
-import parsers.residuos.JsonParserResiduos
-import parsers.residuos.XmlParserResiduos
+import parsers.exporting.contenedores.CsvExporterContenedores
+import parsers.exporting.contenedores.JsonExporterContenedores
+import parsers.exporting.contenedores.XmlExporterContenedores
+import parsers.exporting.html.HtmlDistritoExporter
+import parsers.exporting.html.HtmlExporter
+import parsers.exporting.residuos.CsvExporterResiduos
+import parsers.exporting.residuos.JsonExporterResiduos
+import parsers.exporting.residuos.XmlExporterResiduos
+import parsers.importing.contenedores.CsvImporterContenedores
+import parsers.importing.residuos.CsvImporterResiduos
 import readers.CsvDirectoryReader
 import utils.awaitAll
 import writers.DirectoryWriter
@@ -32,17 +34,19 @@ fun handleResumen(opcion: OpcionResumen) {
 }
 
 fun writeResumen(opcion: OpcionResumen) {
-    val residuosFuture = supplyAsync { CsvDirectoryReader(opcion.directorioOrigen, CsvParserResiduos()).read() }
-    val contenedoresFuture = supplyAsync { CsvDirectoryReader(opcion.directorioOrigen, CsvParserContenedores()).read() }
+    val residuosFuture = supplyAsync { CsvDirectoryReader(opcion.directorioOrigen, CsvImporterResiduos()).read() }
+    val contenedoresFuture =
+        supplyAsync { CsvDirectoryReader(opcion.directorioOrigen, CsvImporterContenedores()).read() }
 
     val consulta = Consulta(contenedoresFuture.get(), residuosFuture.get())
 
-    DirectoryWriter(opcion.directorioOrigen, "resumen", HtmlUnParser()).write(consulta)
+    DirectoryWriter(opcion.directorioOrigen, "resumen", HtmlExporter()).write(consulta)
 }
 
 fun writeResumenDistrito(opcion: OpcionResumen) {
-    val residuosFuture = supplyAsync { CsvDirectoryReader(opcion.directorioOrigen, CsvParserResiduos()).read() }
-    val contenedoresFuture = supplyAsync { CsvDirectoryReader(opcion.directorioOrigen, CsvParserContenedores()).read() }
+    val residuosFuture = supplyAsync { CsvDirectoryReader(opcion.directorioOrigen, CsvImporterResiduos()).read() }
+    val contenedoresFuture =
+        supplyAsync { CsvDirectoryReader(opcion.directorioOrigen, CsvImporterContenedores()).read() }
 
     val consulta =
         ConsultaDistrito(
@@ -51,32 +55,31 @@ fun writeResumenDistrito(opcion: OpcionResumen) {
             StringUtils.stripAccents(opcion.distrito).uppercase()
         )
 
-    DirectoryWriter(opcion.directorioOrigen, "resumen${opcion.distrito}", HtmlDistritoUnParser()).write(consulta)
+    DirectoryWriter(opcion.directorioOrigen, "resumen${opcion.distrito}", HtmlDistritoExporter()).write(consulta)
 }
 
 fun writeParser(opcion: Opcion) {
-    val csvParserContenedores = CsvParserContenedores()
-    val csvParserResiduos = CsvParserResiduos()
 
     val residuosFileWriter = DirectoryWriter(
         opcion.directorioDestino,
         "residuos",
-        JsonParserResiduos(),
-        XmlParserResiduos(),
-        csvParserResiduos
+        JsonExporterResiduos(),
+        XmlExporterResiduos(),
+        CsvExporterResiduos()
     )
 
     val contenedoresFileWriter = DirectoryWriter(
         opcion.directorioDestino,
         "contenedores",
-        JsonParserContenedores(),
-        XmlParserContenedores(),
-        csvParserContenedores
+        JsonExporterContenedores(),
+        XmlExporterContenedores(),
+        CsvExporterContenedores()
     )
 
 
-    val residuosFuture = supplyAsync { CsvDirectoryReader(opcion.directorioOrigen, csvParserResiduos).read() }
-    val contenedoresFuture = supplyAsync { CsvDirectoryReader(opcion.directorioOrigen, csvParserContenedores).read() }
+    val residuosFuture = supplyAsync { CsvDirectoryReader(opcion.directorioOrigen, CsvImporterResiduos()).read() }
+    val contenedoresFuture =
+        supplyAsync { CsvDirectoryReader(opcion.directorioOrigen, CsvImporterContenedores()).read() }
 
     //write async
 

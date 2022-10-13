@@ -7,7 +7,7 @@ import kotlinx.serialization.json.Json
 import models.Contenedor
 import models.TipoContenedor
 import org.junit.jupiter.api.Test
-import parsers.contenedores.JsonParserContenedores
+import parsers.importing.contenedores.JsonImporterContenedores
 import writers.FileWriter
 import java.io.File
 
@@ -36,7 +36,7 @@ internal class ContenedoresJsonWriterTest {
             )
         )
 
-        val writer = FileWriter("src/test/resources/writtenContenedores.json", JsonParserContenedores())
+        val writer = FileWriter("src/test/resources/writtenContenedores.json", JsonImporterContenedores())
 
         writer.write(content.toContenedorDto())
 

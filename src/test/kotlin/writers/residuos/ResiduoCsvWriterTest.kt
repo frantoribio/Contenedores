@@ -3,7 +3,7 @@ package writers.residuos
 import extensions.toResiduoDto
 import models.Residuo
 import org.junit.jupiter.api.Test
-import parsers.residuos.CsvParserResiduos
+import parsers.importing.residuos.CsvImporterResiduos
 import writers.FileWriter
 import java.io.File
 import java.time.LocalDate
@@ -13,7 +13,7 @@ internal class ResiduoCsvWriterTest {
 
     @Test
     fun shouldWrite() {
-        val writer = FileWriter("src/test/resources/written.csv", CsvParserResiduos())
+        val writer = FileWriter("src/test/resources/written.csv", CsvImporterResiduos())
         val content = sequenceOf(
             Residuo(
                 LocalDate.of(1, Month.JANUARY.value, 1),

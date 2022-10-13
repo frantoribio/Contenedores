@@ -55,7 +55,7 @@ fun String.toMonth(): Month {
     }
 }
 
-//reverse parse
+//reverse import
 fun Month.toSpanish(): String {
     return when (this) {
         Month.JANUARY -> "enero"

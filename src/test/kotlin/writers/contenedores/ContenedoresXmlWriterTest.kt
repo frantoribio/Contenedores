@@ -7,7 +7,7 @@ import models.Contenedor
 import models.TipoContenedor
 import nl.adaptivity.xmlutil.serialization.XML
 import org.junit.jupiter.api.Test
-import parsers.contenedores.XmlParserContenedores
+import parsers.importing.contenedores.XmlImporterContenedores
 import writers.FileWriter
 import java.io.File
 
@@ -36,7 +36,7 @@ internal class ContenedoresXmlWriterTest {
             )
         )
 
-        val writer = FileWriter("src/test/resources/writtenContenedores.xml", XmlParserContenedores())
+        val writer = FileWriter("src/test/resources/writtenContenedores.xml", XmlImporterContenedores())
 
         writer.write(content.toContenedorDto())
 

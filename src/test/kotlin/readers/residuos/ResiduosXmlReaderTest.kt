@@ -3,7 +3,7 @@ package readers.residuos
 import extensions.toResiduo
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import parsers.residuos.XmlParserResiduos
+import parsers.importing.residuos.XmlImporterResiduos
 import readers.FileReader
 import java.io.FileNotFoundException
 
@@ -11,7 +11,7 @@ internal class ResiduosXmlReaderTest {
 
     @Test
     fun shouldRead() {
-        val reader = FileReader("src/test/resources/residuos.xml", XmlParserResiduos())
+        val reader = FileReader("src/test/resources/residuos.xml", XmlImporterResiduos())
 
         val data = reader.read().toResiduo()
         val residuo = data.firstOrNull()
@@ -26,7 +26,7 @@ internal class ResiduosXmlReaderTest {
 
     @Test
     fun shouldNotReadNonExistingFile() {
-        val reader = FileReader("src/test/resources/asdresiduos.xml", XmlParserResiduos())
+        val reader = FileReader("src/test/resources/asdresiduos.xml", XmlImporterResiduos())
 
         assertThrows<FileNotFoundException> { reader.read().toList() }
     }

@@ -1,11 +1,11 @@
 package readers.contenedores
 
-import exceptions.CsvException
 import extensions.toContenedor
 import models.TipoContenedor
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import parsers.contenedores.CsvParserContenedores
+import parsers.exceptions.ImportException
+import parsers.importing.contenedores.CsvImporterContenedores
 import readers.FileReader
 import java.io.FileNotFoundException
 
@@ -14,7 +14,7 @@ internal class ContenedorCsvReaderTest {
 
     @Test
     fun shouldRead() {
-        val reader = FileReader("src/test/resources/contenedores.csv", CsvParserContenedores())
+        val reader = FileReader("src/test/resources/contenedores.csv", CsvImporterContenedores())
         val data = reader.read().toContenedor()
         val expected = data.firstOrNull()
 
@@ -26,13 +26,13 @@ internal class ContenedorCsvReaderTest {
 
     @Test
     fun shouldNotRead() {
-        val reader = FileReader("src/test/resources/badContenedores.csv", CsvParserContenedores())
-        assertThrows<CsvException> { reader.read().toList() }
+        val reader = FileReader("src/test/resources/badContenedores.csv", CsvImporterContenedores())
+        assertThrows<ImportException> { reader.read().toList() }
     }
 
     @Test
     fun shouldNotReadNonExistingFile() {
-        val reader = FileReader("src/test/resources/asdcontenedores.csv", CsvParserContenedores())
+        val reader = FileReader("src/test/resources/asdcontenedores.csv", CsvImporterContenedores())
         assertThrows<FileNotFoundException> { reader.read().toList() }
     }
 }

@@ -1,4 +1,4 @@
-package parsers.html
+package parsers.exporting.html
 
 import dto.*
 import extensions.exportToHtml
@@ -12,18 +12,15 @@ import org.jetbrains.kotlinx.dataframe.api.*
 import org.jetbrains.letsPlot.geom.geomBar
 import org.jetbrains.letsPlot.label.ggtitle
 import org.jetbrains.letsPlot.letsPlot
-import parsers.UnParser
+import parsers.formats.IHtmlExporter
 import java.io.OutputStream
 import java.time.Duration
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME
 
-class HtmlDistritoUnParser : UnParser<ConsultaDistrito> {
-    override val extension: String
-        get() = ".html"
-
-    override fun unParse(input: ConsultaDistrito, outputStream: OutputStream) {
+class HtmlDistritoExporter : IHtmlExporter<ConsultaDistrito> {
+    override fun export(input: ConsultaDistrito, outputStream: OutputStream) {
         val residuosDf = input.residuos.toList().toDataFrame()
         val contenedoresDf = input.contenedores.toList().toDataFrame()
         val start = Instant.now()

@@ -4,7 +4,7 @@ import exceptions.ArgsException
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
-internal class ArgsParserTest {
+internal class ArgsImporterTest {
 
     @Test
     fun shouldParseOpcionParser() {

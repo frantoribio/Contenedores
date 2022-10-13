@@ -1,6 +1,6 @@
 package extensions
 
-import exceptions.CsvException
+import parsers.exceptions.ImportException
 
 fun Sequence<String>.filterFirstLine(firstLine: String): Sequence<String> = sequence {
     var isFirstLine = true
@@ -8,7 +8,7 @@ fun Sequence<String>.filterFirstLine(firstLine: String): Sequence<String> = sequ
         if (isFirstLine) {
             val header = it.replace("\uFEFF", "")
             if (firstLine != header)
-                throw CsvException("El formato del csv no es correcto")
+                throw ImportException("El formato del csv no es correcto")
             isFirstLine = false
         }
         yield(it)

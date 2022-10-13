@@ -1,6 +1,6 @@
 package writers
 
-import parsers.UnParser
+import parsers.IExporter
 import utils.awaitAll
 import java.io.File
 import java.io.File.separator
@@ -10,8 +10,8 @@ import java.util.function.Supplier
 class DirectoryWriter<T>(
     private var path: String,
     private val fileName: String,
-    vararg parsers: UnParser<T>
-) : Writer<T> {
+    vararg exporters: IExporter<T>,
+) {
     private val fileWriters = mutableListOf<FileWriter<T>>()
 
     init {
@@ -21,7 +21,7 @@ class DirectoryWriter<T>(
             .apply { isDirectory || mkdirs() }
             .path
 
-        parsers.forEach { parser ->
+        exporters.forEach { parser ->
             fileWriters.add(
                 FileWriter(
                     "$path$separator${fileName + UUID.randomUUID() + parser.extension}",
@@ -31,5 +31,5 @@ class DirectoryWriter<T>(
         }
     }
 
-    override fun write(content: T) = awaitAll(*fileWriters.map { Supplier { it.write(content) } }.toTypedArray())
+    fun write(content: T) = awaitAll(*fileWriters.map { Supplier { it.write(content) } }.toTypedArray())
 }
