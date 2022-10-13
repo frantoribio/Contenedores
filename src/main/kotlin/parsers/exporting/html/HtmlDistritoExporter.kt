@@ -9,6 +9,7 @@ import models.ConsultaDistrito
 import org.apache.commons.lang3.StringUtils
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.*
+import org.jetbrains.letsPlot.Stat
 import org.jetbrains.letsPlot.geom.geomBar
 import org.jetbrains.letsPlot.label.ggtitle
 import org.jetbrains.letsPlot.letsPlot
@@ -52,12 +53,12 @@ class HtmlDistritoExporter : IHtmlExporter<ConsultaDistrito> {
                     consulta1(contenedoresDf, input.distrito)
                     titleInfo("Total de toneladas recogidas en ese distrito por residuo en este distrito")
                     consulta2(residuosDf, input.distrito)
-                    titleInfo("Gráfico con el total de contenedores por residuo en este distrito")
+                    titleInfo("Gráfico con el total de toneladas por residuo en este distrito")
                     consulta3(residuosDf, input.distrito)
                     titleInfo("Máximo, mínimo , media y desviación por mes por residuo en dicho distrito")
                     consulta4(residuosDf, input.distrito)
                     titleInfo("Gráfica del máximo, mínimo y media por meses en dicho distrito")
-                    //consulta5(residuosDf, input.distrito)
+                    consulta5(residuosDf, input.distrito)
                 }
 
 
@@ -105,20 +106,14 @@ class HtmlDistritoExporter : IHtmlExporter<ConsultaDistrito> {
         val distritos = contenedores
             .filter { nombreDistrito.clear == distrito }
 
-        val distritosToToneladas = distritos.groupBy { residuo }.map { fechaGroup ->
-            val list = mutableListOf<String>()
-            repeat(fechaGroup.group.sumOf { toneladas }.toInt()) {
-                list.add(fechaGroup.key.residuo)
-            }
-            list
-        }.flatten()
+        val distritosToToneladas = distritos.groupBy { residuo }.aggregate {
+            sum { toneladas } into "total toneladas"
+        }.toMap()
 
-        val data = mapOf(
-            "Toneladas" to distritosToToneladas
-        )
-
-        val p = letsPlot(data) +
-                geomBar(color = "dark_green", alpha = .3) { x = "Toneladas" } +
+        val p = letsPlot(distritosToToneladas) +
+                geomBar(stat = Stat.identity, color = "dark_green", alpha = .3) {
+                    x = "Residuo"; y = "total toneladas"
+                } +
                 ggtitle("Gráfico de suma de toneladas por residuo en $distrito")
 
         div("card card border-info m-5 w-50") {
@@ -151,20 +146,12 @@ class HtmlDistritoExporter : IHtmlExporter<ConsultaDistrito> {
         val distritos = residuos
             .filter { nombreDistrito.clear == distrito }
 
-        val distritosToToneladas = distritos.groupBy { mes }.map { fechaGroup ->
-            val list = mutableListOf<String>()
-            repeat(fechaGroup.group.meanOf { toneladas }.toInt()) {
-                list.add(fechaGroup.key.mes)
-            }
-            list
-        }.flatten()
+        val distritosToToneladas = distritos.groupBy { mes }.aggregate {
+            mean { toneladas } into "media"
+        }.toMap()
 
-        val data = mapOf(
-            "Toneladas" to distritosToToneladas
-        )
-
-        val p = letsPlot(data) +
-                geomBar(color = "dark_green", alpha = .3) { x = "Toneladas" } +
+        val p = letsPlot(distritosToToneladas) +
+                geomBar(stat = Stat.identity, color = "dark_green", alpha = .3) { x = "Mes"; y = "media" } +
                 ggtitle("Gráfico de media de toneladas mensuales de recogida de basura en $distrito")
 
         div("card card border-info m-5 w-50") {
