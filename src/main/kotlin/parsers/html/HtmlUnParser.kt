@@ -9,7 +9,6 @@ import models.Consulta
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.*
 import org.jetbrains.letsPlot.geom.geomBar
-import org.jetbrains.letsPlot.ggsize
 import org.jetbrains.letsPlot.label.ggtitle
 import org.jetbrains.letsPlot.letsPlot
 import parsers.UnParser
@@ -128,7 +127,6 @@ class HtmlUnParser : UnParser<Consulta> {
         )
         val p = letsPlot(data) +
                 geomBar(color = "dark_green", alpha = .3) { x = "Distritos" } +
-                ggsize(700, 350) +
                 ggtitle("Gráfico con el total de contenedores por distrito")
 
         unsafe { +p.exportToHtml() }
@@ -172,7 +170,6 @@ class HtmlUnParser : UnParser<Consulta> {
 
             val p = letsPlot(data) +
                     geomBar(color = "dark_green", alpha = .3) { x = "Meses" } +
-                    ggsize(700, 350) +
                     ggtitle("Gráfico de media de toneladas mensuales de recogida de basura en ${distrito.key.nombreDistrito}")
 
             div("card card border-info m-5 w-50") {
