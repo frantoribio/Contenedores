@@ -1,6 +1,7 @@
 package extensions
 
 import loggers.LoggedCsvDirectoryReader
+import mu.KLogger
 import readers.CsvDirectoryReader
 
-fun <T> CsvDirectoryReader<T>.logged() = LoggedCsvDirectoryReader(this)
+infix fun <T> CsvDirectoryReader<T>.loggedWith(logger: KLogger) = LoggedCsvDirectoryReader(this, logger)

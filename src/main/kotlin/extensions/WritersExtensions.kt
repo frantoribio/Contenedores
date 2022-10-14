@@ -1,6 +1,7 @@
 package extensions
 
 import loggers.LoggedDirectoryWritter
+import mu.KLogger
 import writers.DirectoryWriter
 
-fun <T> DirectoryWriter<T>.logged() = LoggedDirectoryWritter(this)
+infix fun <T> DirectoryWriter<T>.loggedWith(logger: KLogger) = LoggedDirectoryWritter(this, logger)

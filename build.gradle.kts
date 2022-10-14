@@ -33,6 +33,10 @@ dependencies {
     implementation("org.jetbrains.lets-plot:lets-plot-kotlin-jvm:4.1.0")
     implementation("org.jetbrains.kotlinx:dataframe:0.8.1")
     implementation("org.apache.commons:commons-lang3:3.12.0")
+    //kotlin loggin
+    implementation("io.github.microutils:kotlin-logging-jvm:3.0.0")
+    //logback
+    implementation("ch.qos.logback:logback-classic:1.4.3")
 
 }
 

@@ -13,10 +13,11 @@ import core.exporting.residuos.XmlExporterResiduos
 import core.exporting.xml.BitacoraExporter
 import core.importing.contenedores.CsvImporterContenedores
 import core.importing.residuos.CsvImporterResiduos
-import extensions.logged
+import extensions.loggedWith
 import models.Bitacora
 import models.Consulta
 import models.ConsultaDistrito
+import mu.KotlinLogging
 import org.apache.commons.lang3.StringUtils
 import readers.CsvDirectoryReader
 import utils.awaitAll
@@ -28,6 +29,7 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 import java.util.concurrent.CompletableFuture.supplyAsync
 
+val logger = KotlinLogging.logger("Main")
 fun main(args: Array<String>) {
 
     when (val opcion = ArgsParser(args).parse()) {
@@ -51,17 +53,16 @@ fun withBitacora(opcion: Opcion, process: () -> Unit) {
         ex = it
     }
 
-    DirectoryWriter(opcion.directorioDestino, "bitacora", BitacoraExporter())
-        .logged()
-        .write(
-            Bitacora(
-                UUID.randomUUID().toString(),
-                start,
-                opcion.toString(),
-                hasExito,
-                Duration.between(Instant.now(), instant).toString()
-            )
+    val writerBitacora = DirectoryWriter(opcion.directorioDestino, "bitacora", BitacoraExporter()) loggedWith logger
+    writerBitacora.write(
+        Bitacora(
+            UUID.randomUUID().toString(),
+            start,
+            opcion.toString(),
+            hasExito,
+            Duration.between(Instant.now(), instant).toString()
         )
+    )
 
     throw ex ?: return
 }
@@ -73,22 +74,22 @@ fun handleResumen(opcion: OpcionResumen) {
 
 fun writeResumen(opcion: OpcionResumen) {
     val residuosFuture =
-        supplyAsync { CsvDirectoryReader(opcion.directorioOrigen, CsvImporterResiduos()).logged().read() }
+        supplyAsync { CsvDirectoryReader(opcion.directorioOrigen, CsvImporterResiduos()).loggedWith(logger).read() }
     val contenedoresFuture =
-        supplyAsync { CsvDirectoryReader(opcion.directorioOrigen, CsvImporterContenedores()).logged().read() }
+        supplyAsync { CsvDirectoryReader(opcion.directorioOrigen, CsvImporterContenedores()).loggedWith(logger).read() }
 
     val consulta = Consulta(contenedoresFuture.get(), residuosFuture.get())
 
     DirectoryWriter(opcion.directorioDestino, "resumen", HtmlExporter())
-        .logged()
+        .loggedWith(logger)
         .write(consulta)
 }
 
 fun writeResumenDistrito(opcion: OpcionResumen) {
     val residuosFuture =
-        supplyAsync { CsvDirectoryReader(opcion.directorioOrigen, CsvImporterResiduos()).logged().read() }
+        supplyAsync { CsvDirectoryReader(opcion.directorioOrigen, CsvImporterResiduos()).loggedWith(logger).read() }
     val contenedoresFuture =
-        supplyAsync { CsvDirectoryReader(opcion.directorioOrigen, CsvImporterContenedores()).logged().read() }
+        supplyAsync { CsvDirectoryReader(opcion.directorioOrigen, CsvImporterContenedores()).loggedWith(logger).read() }
 
     val consulta =
         ConsultaDistrito(
@@ -98,7 +99,7 @@ fun writeResumenDistrito(opcion: OpcionResumen) {
         )
 
     DirectoryWriter(opcion.directorioDestino, "resumen${opcion.distrito}", HtmlDistritoExporter())
-        .logged()
+        .loggedWith(logger)
         .write(consulta)
 }
 
@@ -109,7 +110,8 @@ fun writeParser(opcion: Opcion) {
         JsonExporterResiduos(),
         XmlExporterResiduos(),
         CsvExporterResiduos()
-    ).logged()
+    ) loggedWith logger
+
 
     val contenedoresFileWriter = DirectoryWriter(
         opcion.directorioDestino,
@@ -117,13 +119,13 @@ fun writeParser(opcion: Opcion) {
         JsonExporterContenedores(),
         XmlExporterContenedores(),
         CsvExporterContenedores()
-    ).logged()
+    ) loggedWith logger
 
 
     val residuosFuture =
-        supplyAsync { CsvDirectoryReader(opcion.directorioOrigen, CsvImporterResiduos()).logged().read() }
+        supplyAsync { CsvDirectoryReader(opcion.directorioOrigen, CsvImporterResiduos()).loggedWith(logger).read() }
     val contenedoresFuture =
-        supplyAsync { CsvDirectoryReader(opcion.directorioOrigen, CsvImporterContenedores()).logged().read() }
+        supplyAsync { CsvDirectoryReader(opcion.directorioOrigen, CsvImporterContenedores()).loggedWith(logger).read() }
 
     //write async
 
