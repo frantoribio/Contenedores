@@ -17,8 +17,7 @@ class DirectoryWriter<T>(
     init {
         path = File(path)
             .apply { if (isFile) throw IllegalArgumentException("El directorio destino no puede ser un archivo") }
-            .apply { if (!canWrite()) throw IllegalArgumentException("No se puede escribir en el directorio destino") }
-            .apply { isDirectory || mkdirs() }
+            .apply { (isDirectory || mkdirs()) || throw IllegalArgumentException("No se pudo crear el directorio destino") }
             .path
 
         exporters.forEach { parser ->
