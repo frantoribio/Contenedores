@@ -6,10 +6,10 @@ import java.io.File
 import java.io.File.separator
 import java.util.function.Supplier
 
-class DirectoryWriter<T>(
-    private var path: String,
-    private val fileName: String,
-    vararg exporters: IExporter<T>,
+internal class DirectoryWriter<T>(
+    var path: String,
+    val fileName: String,
+    vararg val exporters: IExporter<T>,
 ) {
     private val fileWriters = mutableListOf<FileWriter<T>>()
 

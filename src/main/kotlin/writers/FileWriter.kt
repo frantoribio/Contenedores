@@ -4,7 +4,7 @@ import parsers.IExporter
 import java.io.File
 import java.nio.file.Files
 
-class FileWriter<T>(path: String, private val parser: IExporter<T>) {
+internal class FileWriter<T>(path: String, private val parser: IExporter<T>) {
     private val file = File(path)
     fun write(content: T) = file
         .apply { if (isDirectory) throw IllegalArgumentException("El archivo destino no puede ser un directorio") }

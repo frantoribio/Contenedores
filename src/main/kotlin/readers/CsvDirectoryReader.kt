@@ -4,7 +4,7 @@ import aliases.CsvSequenceImporter
 import extensions.firstLine
 import java.io.File
 
-class CsvDirectoryReader<T>(path: String, private val parser: CsvSequenceImporter<T>) {
+class CsvDirectoryReader<T>(val path: String, val parser: CsvSequenceImporter<T>) {
 
     private val fileReader: FileReader<T>
 

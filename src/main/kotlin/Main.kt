@@ -2,6 +2,7 @@ import args.ArgsParser
 import args.Opcion
 import args.OpcionParser
 import args.OpcionResumen
+import extensions.logged
 import models.Bitacora
 import models.Consulta
 import models.ConsultaDistrito
@@ -48,19 +49,17 @@ fun withBitacora(opcion: Opcion, process: () -> Unit) {
         hasExito = false
     }
 
-    DirectoryWriter(
-        opcion.directorioDestino,
-        "bitacora",
-        BitacoraExporter()
-    ).write(
-        Bitacora(
-            UUID.randomUUID().toString(),
-            start,
-            opcion.toString(),
-            hasExito,
-            Duration.between(Instant.now(), instant).toString()
+    DirectoryWriter(opcion.directorioDestino, "bitacora", BitacoraExporter())
+        .logged()
+        .write(
+            Bitacora(
+                UUID.randomUUID().toString(),
+                start,
+                opcion.toString(),
+                hasExito,
+                Duration.between(Instant.now(), instant).toString()
+            )
         )
-    )
 }
 
 fun handleResumen(opcion: OpcionResumen) {
@@ -69,19 +68,23 @@ fun handleResumen(opcion: OpcionResumen) {
 }
 
 fun writeResumen(opcion: OpcionResumen) {
-    val residuosFuture = supplyAsync { CsvDirectoryReader(opcion.directorioOrigen, CsvImporterResiduos()).read() }
+    val residuosFuture =
+        supplyAsync { CsvDirectoryReader(opcion.directorioOrigen, CsvImporterResiduos()).logged().read() }
     val contenedoresFuture =
-        supplyAsync { CsvDirectoryReader(opcion.directorioOrigen, CsvImporterContenedores()).read() }
+        supplyAsync { CsvDirectoryReader(opcion.directorioOrigen, CsvImporterContenedores()).logged().read() }
 
     val consulta = Consulta(contenedoresFuture.get(), residuosFuture.get())
 
-    DirectoryWriter(opcion.directorioDestino, "resumen", HtmlExporter()).write(consulta)
+    DirectoryWriter(opcion.directorioDestino, "resumen", HtmlExporter())
+        .logged()
+        .write(consulta)
 }
 
 fun writeResumenDistrito(opcion: OpcionResumen) {
-    val residuosFuture = supplyAsync { CsvDirectoryReader(opcion.directorioOrigen, CsvImporterResiduos()).read() }
+    val residuosFuture =
+        supplyAsync { CsvDirectoryReader(opcion.directorioOrigen, CsvImporterResiduos()).logged().read() }
     val contenedoresFuture =
-        supplyAsync { CsvDirectoryReader(opcion.directorioOrigen, CsvImporterContenedores()).read() }
+        supplyAsync { CsvDirectoryReader(opcion.directorioOrigen, CsvImporterContenedores()).logged().read() }
 
     val consulta =
         ConsultaDistrito(
@@ -90,7 +93,9 @@ fun writeResumenDistrito(opcion: OpcionResumen) {
             StringUtils.stripAccents(opcion.distrito).uppercase()
         )
 
-    DirectoryWriter(opcion.directorioDestino, "resumen${opcion.distrito}", HtmlDistritoExporter()).write(consulta)
+    DirectoryWriter(opcion.directorioDestino, "resumen${opcion.distrito}", HtmlDistritoExporter())
+        .logged()
+        .write(consulta)
 }
 
 fun writeParser(opcion: Opcion) {
@@ -100,7 +105,7 @@ fun writeParser(opcion: Opcion) {
         JsonExporterResiduos(),
         XmlExporterResiduos(),
         CsvExporterResiduos()
-    )
+    ).logged()
 
     val contenedoresFileWriter = DirectoryWriter(
         opcion.directorioDestino,
@@ -108,12 +113,13 @@ fun writeParser(opcion: Opcion) {
         JsonExporterContenedores(),
         XmlExporterContenedores(),
         CsvExporterContenedores()
-    )
+    ).logged()
 
 
-    val residuosFuture = supplyAsync { CsvDirectoryReader(opcion.directorioOrigen, CsvImporterResiduos()).read() }
+    val residuosFuture =
+        supplyAsync { CsvDirectoryReader(opcion.directorioOrigen, CsvImporterResiduos()).logged().read() }
     val contenedoresFuture =
-        supplyAsync { CsvDirectoryReader(opcion.directorioOrigen, CsvImporterContenedores()).read() }
+        supplyAsync { CsvDirectoryReader(opcion.directorioOrigen, CsvImporterContenedores()).logged().read() }
 
     //write async
 
