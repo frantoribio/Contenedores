@@ -4,6 +4,8 @@ import exceptions.ArgsException
 
 class OpcionResumen(params: Array<String>) : Opcion {
 
+    override fun toString(): String = "Resumen ${if (distrito == null) "global" else "$distrito"}"
+
     private var _distrito: String? = null
     private var _directorioOrigen: String
     private var _directorioDestino: String
