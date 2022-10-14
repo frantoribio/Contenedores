@@ -7,7 +7,7 @@ import models.Contenedor
 import models.TipoContenedor
 import nl.adaptivity.xmlutil.serialization.XML
 import org.junit.jupiter.api.Test
-import parsers.importing.contenedores.XmlImporterContenedores
+import core.importing.contenedores.XmlImporterContenedores
 import writers.FileWriter
 import java.io.File
 

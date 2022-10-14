@@ -4,8 +4,8 @@ import extensions.toContenedor
 import models.TipoContenedor
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import parsers.exceptions.ImportException
-import parsers.importing.contenedores.CsvImporterContenedores
+import core.exceptions.ImportException
+import core.importing.contenedores.CsvImporterContenedores
 import readers.FileReader
 import java.io.FileNotFoundException
 

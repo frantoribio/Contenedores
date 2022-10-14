@@ -1,6 +1,6 @@
 package extensions
 
-import parsers.exceptions.ImportException
+import core.exceptions.ImportException
 
 fun Sequence<String>.filterFirstLine(firstLine: String): Sequence<String> = sequence {
     var isFirstLine = true

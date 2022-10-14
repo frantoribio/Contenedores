@@ -4,7 +4,7 @@ import extensions.toContenedorDto
 import models.Contenedor
 import models.TipoContenedor
 import org.junit.jupiter.api.Test
-import parsers.importing.contenedores.CsvImporterContenedores
+import core.importing.contenedores.CsvImporterContenedores
 import writers.FileWriter
 import java.io.File
 

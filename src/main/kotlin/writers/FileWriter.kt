@@ -1,6 +1,6 @@
 package writers
 
-import parsers.IExporter
+import core.IExporter
 import java.io.File
 import java.nio.file.Files
 

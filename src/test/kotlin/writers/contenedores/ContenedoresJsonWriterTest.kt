@@ -7,7 +7,7 @@ import kotlinx.serialization.json.Json
 import models.Contenedor
 import models.TipoContenedor
 import org.junit.jupiter.api.Test
-import parsers.importing.contenedores.JsonImporterContenedores
+import core.importing.contenedores.JsonImporterContenedores
 import writers.FileWriter
 import java.io.File
 

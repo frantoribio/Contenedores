@@ -1,6 +1,6 @@
 package writers
 
-import parsers.IExporter
+import core.IExporter
 import utils.awaitAll
 import java.io.File
 import java.io.File.separator

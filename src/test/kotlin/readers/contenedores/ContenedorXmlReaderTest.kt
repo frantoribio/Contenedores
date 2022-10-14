@@ -3,7 +3,7 @@ package readers.contenedores
 import extensions.toContenedor
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import parsers.importing.contenedores.XmlImporterContenedores
+import core.importing.contenedores.XmlImporterContenedores
 import readers.FileReader
 import java.io.FileNotFoundException
 

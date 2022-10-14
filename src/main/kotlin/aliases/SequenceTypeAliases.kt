@@ -2,8 +2,8 @@ package aliases
 
 import dto.ContenedorDto
 import dto.ResiduoDto
-import parsers.IImporter
-import parsers.formats.ICsvImporter
+import core.IImporter
+import core.formats.ICsvImporter
 
 typealias Contenedores = Sequence<ContenedorDto>
 typealias Residuos = Sequence<ResiduoDto>

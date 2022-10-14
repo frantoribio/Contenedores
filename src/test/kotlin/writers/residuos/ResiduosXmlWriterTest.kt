@@ -6,7 +6,7 @@ import kotlinx.serialization.decodeFromString
 import models.Residuo
 import nl.adaptivity.xmlutil.serialization.XML
 import org.junit.jupiter.api.Test
-import parsers.importing.residuos.XmlImporterResiduos
+import core.importing.residuos.XmlImporterResiduos
 import writers.FileWriter
 import java.io.File
 import java.time.LocalDate

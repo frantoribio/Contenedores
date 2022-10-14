@@ -3,7 +3,7 @@ package readers.residuos
 import extensions.toResiduo
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import parsers.importing.residuos.JsonImporterResiduos
+import core.importing.residuos.JsonImporterResiduos
 import readers.FileReader
 import java.io.FileNotFoundException
 
