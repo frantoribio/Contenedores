@@ -13,88 +13,78 @@ import core.exporting.residuos.XmlExporterResiduos
 import core.exporting.xml.BitacoraExporter
 import core.importing.contenedores.CsvImporterContenedores
 import core.importing.residuos.CsvImporterResiduos
+import exceptions.ArgsException
+import exceptions.FileException
 import extensions.loggedWith
-import models.Bitacora
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import models.Consulta
 import models.ConsultaDistrito
 import mu.KotlinLogging
 import org.apache.commons.lang3.StringUtils
 import readers.CsvDirectoryReader
-import utils.awaitAll
+import utils.withBitacora
 import writers.DirectoryWriter
-import java.time.Duration
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.util.*
-import java.util.concurrent.CompletableFuture.supplyAsync
 
-val logger = KotlinLogging.logger("Main")
-fun main(args: Array<String>) {
-
-    when (val opcion = ArgsParser(args).parse()) {
-        is OpcionParser -> withBitacora(opcion) { writeParser(opcion) }
-        is OpcionResumen -> withBitacora(opcion) { handleResumen(opcion) }
-    }
-}
-
-fun withBitacora(opcion: Opcion, process: () -> Unit) {
-    var ex: Throwable? = null
-    var hasExito = true
-    val start = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME)
-    val instant = Instant.now()
-
+val logger = KotlinLogging.logger("Console")
+fun main(args: Array<String>): Unit = runBlocking {
     runCatching {
-        process()
+        val opcion = ArgsParser(args).parse()
+
+        val bitacoraWriter = DirectoryWriter(
+            opcion.directorioDestino,
+            "bitacora",
+            BitacoraExporter()
+        ) loggedWith logger
+
+        when (opcion) {
+            is OpcionParser -> withBitacora(bitacoraWriter, opcion) { writeParser(opcion) }
+            is OpcionResumen -> withBitacora(bitacoraWriter, opcion) { handleResumen(opcion) }
+        }
     }.onSuccess {
-        hasExito = true
+        logger.info { "Proceso finalizado correctamente" }
     }.onFailure {
-        hasExito = false
-        ex = it
+        when (it) {
+            //For args and file exceptions we don't log the stacktrace
+            is ArgsException -> logger.error(it.message)
+            is FileException -> logger.error(it.message)
+            else -> logger.error(it) { it.message }
+        }
     }
-
-    val writerBitacora = DirectoryWriter(opcion.directorioDestino, "bitacora", BitacoraExporter()) loggedWith logger
-    writerBitacora.write(
-        Bitacora(
-            UUID.randomUUID().toString(),
-            start,
-            opcion.toString(),
-            hasExito,
-            Duration.between(Instant.now(), instant).toString()
-        )
-    )
-
-    throw ex ?: return
 }
 
-fun handleResumen(opcion: OpcionResumen) {
+
+suspend fun handleResumen(opcion: OpcionResumen) {
     if (opcion.distrito == null) writeResumen(opcion)
     else writeResumenDistrito(opcion)
 }
 
-fun writeResumen(opcion: OpcionResumen) {
+suspend fun writeResumen(opcion: OpcionResumen) = coroutineScope {
     val residuosFuture =
-        supplyAsync { CsvDirectoryReader(opcion.directorioOrigen, CsvImporterResiduos()).loggedWith(logger).read() }
+        async { CsvDirectoryReader(opcion.directorioOrigen, CsvImporterResiduos()).loggedWith(logger).read() }
     val contenedoresFuture =
-        supplyAsync { CsvDirectoryReader(opcion.directorioOrigen, CsvImporterContenedores()).loggedWith(logger).read() }
+        async { CsvDirectoryReader(opcion.directorioOrigen, CsvImporterContenedores()).loggedWith(logger).read() }
 
-    val consulta = Consulta(contenedoresFuture.get(), residuosFuture.get())
+    val consulta = Consulta(contenedoresFuture.await(), residuosFuture.await())
 
     DirectoryWriter(opcion.directorioDestino, "resumen", HtmlExporter())
         .loggedWith(logger)
         .write(consulta)
 }
 
-fun writeResumenDistrito(opcion: OpcionResumen) {
+suspend fun writeResumenDistrito(opcion: OpcionResumen) = coroutineScope {
+
     val residuosFuture =
-        supplyAsync { CsvDirectoryReader(opcion.directorioOrigen, CsvImporterResiduos()).loggedWith(logger).read() }
+        async { CsvDirectoryReader(opcion.directorioOrigen, CsvImporterResiduos()).loggedWith(logger).read() }
     val contenedoresFuture =
-        supplyAsync { CsvDirectoryReader(opcion.directorioOrigen, CsvImporterContenedores()).loggedWith(logger).read() }
+        async { CsvDirectoryReader(opcion.directorioOrigen, CsvImporterContenedores()).loggedWith(logger).read() }
 
     val consulta =
         ConsultaDistrito(
-            contenedoresFuture.get(),
-            residuosFuture.get(),
+            contenedoresFuture.await(),
+            residuosFuture.await(),
             StringUtils.stripAccents(opcion.distrito).uppercase()
         )
 
@@ -103,7 +93,7 @@ fun writeResumenDistrito(opcion: OpcionResumen) {
         .write(consulta)
 }
 
-fun writeParser(opcion: Opcion) {
+suspend fun writeParser(opcion: Opcion) = coroutineScope {
     val residuosFileWriter = DirectoryWriter(
         opcion.directorioDestino,
         "residuos",
@@ -121,17 +111,13 @@ fun writeParser(opcion: Opcion) {
         CsvExporterContenedores()
     ) loggedWith logger
 
-
     val residuosFuture =
-        supplyAsync { CsvDirectoryReader(opcion.directorioOrigen, CsvImporterResiduos()).loggedWith(logger).read() }
+        async { CsvDirectoryReader(opcion.directorioOrigen, CsvImporterResiduos()).loggedWith(logger).read() }
     val contenedoresFuture =
-        supplyAsync { CsvDirectoryReader(opcion.directorioOrigen, CsvImporterContenedores()).loggedWith(logger).read() }
+        async { CsvDirectoryReader(opcion.directorioOrigen, CsvImporterContenedores()).loggedWith(logger).read() }
 
     //write async
-
-    awaitAll(
-        { residuosFileWriter.write(residuosFuture.get()) },
-        { contenedoresFileWriter.write(contenedoresFuture.get()) }
-    )
+    launch { residuosFileWriter.write(residuosFuture.await()) }
+    launch { contenedoresFileWriter.write(contenedoresFuture.await()) }
 }
 

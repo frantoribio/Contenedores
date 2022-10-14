@@ -1,22 +1,24 @@
 package writers
 
 import core.IExporter
-import utils.awaitAll
+import exceptions.FileException
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import java.io.File
 import java.io.File.separator
-import java.util.function.Supplier
 
 class DirectoryWriter<T>(
     val path: String,
     val fileName: String,
     vararg val exporters: IExporter<T>,
-) {
+) : IWriter<T> {
     private val fileWriters = mutableListOf<FileWriter<T>>()
 
     init {
         val correctPath = File(path)
-            .apply { if (isFile) throw IllegalArgumentException("El directorio destino no puede ser un archivo") }
-            .apply { (isDirectory || mkdirs()) || throw IllegalArgumentException("No se pudo crear el directorio destino") }
+            .apply { if (isFile) throw FileException("El directorio destino no puede ser un archivo") }
+            .apply { (isDirectory || mkdirs()) || throw FileException("No se pudo crear el directorio destino") }
             .path
 
         exporters.forEach { parser ->
@@ -33,5 +35,7 @@ class DirectoryWriter<T>(
         return name
     }
 
-    fun write(content: T) = awaitAll(*fileWriters.map { Supplier { it.write(content) } }.toTypedArray())
+    override suspend fun write(content: T) {
+        coroutineScope { fileWriters.map { async { it.write(content) } }.awaitAll() }
+    }
 }
