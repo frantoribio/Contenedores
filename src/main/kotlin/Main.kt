@@ -94,7 +94,6 @@ fun writeResumenDistrito(opcion: OpcionResumen) {
 }
 
 fun writeParser(opcion: Opcion) {
-
     val residuosFileWriter = DirectoryWriter(
         opcion.directorioDestino,
         "residuos",
@@ -122,6 +121,5 @@ fun writeParser(opcion: Opcion) {
         { residuosFileWriter.write(residuosFuture.get()) },
         { contenedoresFileWriter.write(contenedoresFuture.get()) }
     )
-
 }
 
