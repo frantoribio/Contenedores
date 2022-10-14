@@ -2,11 +2,6 @@ import args.ArgsParser
 import args.Opcion
 import args.OpcionParser
 import args.OpcionResumen
-import extensions.logged
-import models.Bitacora
-import models.Consulta
-import models.ConsultaDistrito
-import org.apache.commons.lang3.StringUtils
 import core.exporting.contenedores.CsvExporterContenedores
 import core.exporting.contenedores.JsonExporterContenedores
 import core.exporting.contenedores.XmlExporterContenedores
@@ -18,6 +13,11 @@ import core.exporting.residuos.XmlExporterResiduos
 import core.exporting.xml.BitacoraExporter
 import core.importing.contenedores.CsvImporterContenedores
 import core.importing.residuos.CsvImporterResiduos
+import extensions.logged
+import models.Bitacora
+import models.Consulta
+import models.ConsultaDistrito
+import org.apache.commons.lang3.StringUtils
 import readers.CsvDirectoryReader
 import utils.awaitAll
 import writers.DirectoryWriter
@@ -37,6 +37,7 @@ fun main(args: Array<String>) {
 }
 
 fun withBitacora(opcion: Opcion, process: () -> Unit) {
+    var ex: Throwable? = null
     var hasExito = true
     val start = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME)
     val instant = Instant.now()
@@ -47,6 +48,7 @@ fun withBitacora(opcion: Opcion, process: () -> Unit) {
         hasExito = true
     }.onFailure {
         hasExito = false
+        ex = it
     }
 
     DirectoryWriter(opcion.directorioDestino, "bitacora", BitacoraExporter())
@@ -60,6 +62,8 @@ fun withBitacora(opcion: Opcion, process: () -> Unit) {
                 Duration.between(Instant.now(), instant).toString()
             )
         )
+
+    throw ex ?: return
 }
 
 fun handleResumen(opcion: OpcionResumen) {
