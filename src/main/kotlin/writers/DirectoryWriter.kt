@@ -6,21 +6,21 @@ import java.io.File
 import java.io.File.separator
 import java.util.function.Supplier
 
-internal class DirectoryWriter<T>(
-    var path: String,
+class DirectoryWriter<T>(
+    val path: String,
     val fileName: String,
     vararg val exporters: IExporter<T>,
 ) {
     private val fileWriters = mutableListOf<FileWriter<T>>()
 
     init {
-        path = File(path)
+        val correctPath = File(path)
             .apply { if (isFile) throw IllegalArgumentException("El directorio destino no puede ser un archivo") }
             .apply { (isDirectory || mkdirs()) || throw IllegalArgumentException("No se pudo crear el directorio destino") }
             .path
 
         exporters.forEach { parser ->
-            val fileWriter = FileWriter("$path$separator${createName(extension = parser.extension)}", parser)
+            val fileWriter = FileWriter("$correctPath$separator${createName(extension = parser.extension)}", parser)
             fileWriters.add(fileWriter)
         }
     }
