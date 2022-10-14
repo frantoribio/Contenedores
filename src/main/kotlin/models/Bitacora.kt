@@ -1,6 +1,5 @@
 package models
 
-import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 import nl.adaptivity.xmlutil.serialization.XmlElement
 import java.util.*
@@ -15,6 +14,5 @@ data class Bitacora(
     @XmlElement(true)
     val hasExito: Boolean,
     @XmlElement(true)
-    @Contextual
     val tiempoEjecucion: String
 )

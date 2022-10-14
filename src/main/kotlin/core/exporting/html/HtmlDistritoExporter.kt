@@ -51,7 +51,7 @@ class HtmlDistritoExporter : IHtmlExporter<ConsultaDistrito> {
                 div("container-fluid d-flex flex-column align-items-center text-center justify-content-center") {
                     titleInfo("Número de contenedores de cada tipo que hay en este distrito")
                     consulta1(contenedoresDf, input.distrito)
-                    titleInfo("Total de toneladas recogidas en ese distrito por residuo en este distrito")
+                    titleInfo("Total de toneladas recogidas por residuo en este distrito")
                     consulta2(residuosDf, input.distrito)
                     titleInfo("Gráfico con el total de toneladas por residuo en este distrito")
                     consulta3(residuosDf, input.distrito)
