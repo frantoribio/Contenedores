@@ -15,6 +15,11 @@ class BitacoraExporter(
 ) : IXmlExporter<Bitacora> {
 
     override fun export(input: Bitacora, outputStream: OutputStream) {
-        xml.encodeToString(input).let { outputStream.write(it.toByteArray()) }
+        xml.encodeToString(input).let { string ->
+            outputStream.bufferedWriter().let {
+                it.write(string)
+                it.flush()
+            }
+        }
     }
 }
