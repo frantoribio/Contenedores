@@ -15,7 +15,7 @@ class XmlExporterContenedores(
 ) : IXmlExporter<Contenedores> {
 
     override fun export(input: Sequence<ContenedorDto>, outputStream: OutputStream) =
-        xml.encodeToString(input).let { string ->
+        xml.encodeToString(input.toList()).let { string ->
             outputStream.bufferedWriter().let {
                 it.write(string)
                 it.flush()

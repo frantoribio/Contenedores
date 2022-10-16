@@ -14,7 +14,7 @@ class XmlExporterResiduos(
     },
 ) : IXmlExporter<Residuos> {
     override fun export(input: Sequence<ResiduoDto>, outputStream: OutputStream) =
-        xml.encodeToString(input).let { string ->
+        xml.encodeToString(input.toList()).let { string ->
             outputStream.bufferedWriter().let {
                 it.write(string)
                 it.flush()
