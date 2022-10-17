@@ -1,7 +1,7 @@
 package writers
 
-import core.IExporter
 import exceptions.FileException
+import exporting.IExporter
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -9,9 +9,9 @@ import java.io.File
 import java.io.File.separator
 
 class DirectoryWriter<T>(
-    val path: String,
-    val fileName: String,
-    vararg val exporters: IExporter<T>,
+    override val path: String,
+    private val fileName: String,
+    private vararg val exporters: IExporter<T>,
 ) : IWriter<T> {
     private val fileWriters = mutableListOf<FileWriter<T>>()
 
@@ -21,8 +21,8 @@ class DirectoryWriter<T>(
             .apply { (isDirectory || mkdirs()) || throw FileException("No se pudo crear el directorio destino") }
             .path
 
-        exporters.forEach { parser ->
-            val fileWriter = FileWriter("$correctPath$separator${createName(extension = parser.extension)}", parser)
+        exporters.forEach { exporter ->
+            val fileWriter = FileWriter("$correctPath$separator${createName(extension = exporter.extension)}", exporter)
             fileWriters.add(fileWriter)
         }
     }
@@ -38,4 +38,10 @@ class DirectoryWriter<T>(
     override suspend fun write(content: T) {
         coroutineScope { fileWriters.map { async { it.write(content) } }.awaitAll() }
     }
+
+    override val formats: List<String>
+        get() = exporters.map { it.extension }
+
+    override val name: String
+        get() = fileName
 }
